@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/orangeProto"
+    tools:layout_editor_absoluteY="81dp">
+
+    <ImageView
+        android:id="@+id/dormdash_logo"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="23dp"
+        app:layout_constraintBottom_toTopOf="@+id/dormdash_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/dormdash_logo" />
+
+    <EditText
+        android:id="@+id/username_editText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/password_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dormdash_textview" />
+
+    <EditText
+        android:id="@+id/password_editText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="37dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/logIn_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_editText" />
+
+    <Button
+        android:id="@+id/signUp_button"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="74dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="27dp"
+        android:text="Sign Up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_editText"
+        app:layout_constraintVertical_bias="0.416" />
+
+    <TextView
+        android:id="@+id/dormdash_textview"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="21dp"
+        android:fontFamily="sans-serif"
+        android:text="DormDash"
+        android:textColor="@android:color/white"
+        android:textSize="33sp"
+        app:layout_constraintBottom_toTopOf="@+id/username_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dormdash_logo" />
+
+    <TextView
+        android:id="@+id/logIn_textView"
+        android:layout_width="80dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="76dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginStart="10dp"
+        android:text="or, Log In"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/signUp_button" />
+
+</android.support.constraint.ConstraintLayout>
