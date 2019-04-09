@@ -96,4 +96,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         profileButton.setOnClickListener(MainActivity.this);
 
     }
+
+
+    // to do
+    // need to implement a feature in which we have a constant bar at the bottom
+    // if we change the screen, it'll remain at the bottom regardless of whatever layout
+    // and as we scroll, the bottom bar will stay in place
 }
