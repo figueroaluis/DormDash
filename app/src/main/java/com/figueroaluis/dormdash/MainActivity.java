@@ -19,6 +19,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.i("Open Sign Up", "Was pressed");
             Intent intent = new Intent(MainActivity.this, LogSign.class);
             startActivity(intent);
+        } else if(view.getId() == R.id.imageButton_orders){
+            // open the screen to make an order
+            Log.i("Order page button", "Was pressed");
+            Intent intent = new Intent(MainActivity.this, OrderScreen.class);
+            startActivity(intent);
         }
     }
 
@@ -85,12 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         ordersButton = (ImageButton) findViewById(R.id.imageButton_orders);
-        ordersButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Orders button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        ordersButton.setOnClickListener(MainActivity.this);
 
         profileButton = (ImageButton) findViewById(R.id.imageButton_profile);
         profileButton.setOnClickListener(MainActivity.this);
