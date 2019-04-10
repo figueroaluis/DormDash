@@ -61,22 +61,32 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
 
             //add registered user data to database
-            InsertData data = new InsertData();
-            data.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+//            InsertData data = new InsertData();
+//            data.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
 
 
-            Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
             if(signUpMode){
+                ServerConnect serverConnect = new ServerConnect();
+                serverConnect.execute("user", "password");
+
+
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
-                InsertData loginData = new InsertData();
-                loginData.loginUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+                System.out.println("MADE IT LOGIN");
+
+//                ServerConnect serverConnect = new ServerConnect();
+//                Toast.makeText(LogSign.this, message, Toast.LENGTH_SHORT).show();
+
+
+
 
             }
         }
 
     }
+
 
     @Override
     public boolean onKey(View view, int i, KeyEvent keyEvent){
@@ -113,6 +123,7 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
 
     }
+
 
 
 }
