@@ -15,8 +15,17 @@
 
     <profile>
     <id>cloud-gcp</id>
-    </profile>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
+
         <!-- GOOGLE CLOUD CRAP -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -31,17 +40,6 @@
 
 
 
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
-        </dependency>
     </dependencies>
 
     <properties>
@@ -69,6 +67,7 @@
             </plugin>
         </plugins>
     </build>
+    </profile>
 
 
 
