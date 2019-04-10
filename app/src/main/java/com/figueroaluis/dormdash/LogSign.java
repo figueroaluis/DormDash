@@ -61,9 +61,8 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
 
             //add registered user data to database
-            InsertData registerUserData = new InsertData();
-            registerUserData.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-
+            InsertData data = new InsertData();
+            data.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
 
 
             Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
@@ -71,6 +70,9 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
+                InsertData loginData = new InsertData();
+                loginData.loginUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+
             }
         }
 
