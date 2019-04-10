@@ -58,6 +58,14 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
         } else{
             // if the username or the password is in there, then we set them up
             // this is the sign up call
+
+
+            //add registered user data to database
+            InsertData registerUserData = new InsertData();
+            registerUserData.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+
+
+
             Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
             if(signUpMode){
 
