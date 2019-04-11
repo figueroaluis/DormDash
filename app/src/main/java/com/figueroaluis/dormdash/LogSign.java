@@ -23,6 +23,7 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
     EditText passwordEditText;
 
 
+
     // implement a function that allows the button to open another view
     @Override
     public void onClick(View view){
@@ -67,8 +68,14 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
             //Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
             if(signUpMode){
+                //default
                 ServerConnect serverConnect = new ServerConnect();
-                serverConnect.execute("user", "password");
+                serverConnect.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+
+                //stretch
+//                ServerConnectRegister register = new ServerConnectRegister();
+//                register.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+
 
 
 
@@ -127,3 +134,4 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
 
 }
+
