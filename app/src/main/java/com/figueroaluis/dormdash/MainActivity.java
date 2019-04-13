@@ -25,6 +25,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, OrderScreen.class);
             startActivity(intent);
         }
+        else if(view.getId() == R.id.imageButton_search){
+            // open the screen to make an order
+            Log.i("Search page button", "Was pressed");
+            Intent intent = new Intent(MainActivity.this, SearchScreen.class);
+            startActivity(intent);
+        }
     }
 
     ImageButton marketPlaceButton;
@@ -76,24 +82,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         homeButton = (ImageButton) findViewById(R.id.imageButton_homebutton);
         homeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Home button works",
+                Toast.makeText(MainActivity.this, "This is the home screen",
                         Toast.LENGTH_SHORT).show();
             }
         });
 
-        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Search button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
         ordersButton = (ImageButton) findViewById(R.id.imageButton_orders);
         ordersButton.setOnClickListener(MainActivity.this);
 
         profileButton = (ImageButton) findViewById(R.id.imageButton_profile);
         profileButton.setOnClickListener(MainActivity.this);
+
+        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
+        searchButton.setOnClickListener(MainActivity.this);
 
     }
 

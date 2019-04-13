@@ -29,7 +29,7 @@ public class OrderScreen extends AppCompatActivity implements View.OnClickListen
     }
 
     ImageButton homeButton;
-    //ImageButton searchButton;
+    ImageButton searchButton;
     //ImageButton ordersButton;
     ImageButton profileButton;
 
@@ -59,6 +59,9 @@ public class OrderScreen extends AppCompatActivity implements View.OnClickListen
 
         homeButton = (ImageButton) findViewById(R.id.imageButton_homebutton);
         homeButton.setOnClickListener(OrderScreen.this);
+
+        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
+        searchButton.setOnClickListener(OrderScreen.this);
 
     }
 }
