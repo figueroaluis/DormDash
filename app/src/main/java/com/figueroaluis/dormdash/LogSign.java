@@ -1,5 +1,6 @@
 package com.figueroaluis.dormdash;
 
+
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+//begin asynch task library
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
+
 
 public class LogSign extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener{
 
@@ -53,6 +60,7 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
     // method to sign up
     public void onSignUpClicked(View view){
+        AsyncHttpClient client = new AsyncHttpClient();
         // make sure that we have both a username and a password
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
             Toast.makeText(LogSign.this, "A username and a password are required.", Toast.LENGTH_SHORT).show();
@@ -67,24 +75,84 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
 
             //Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
+
+            //sign up module
+            RequestParams params = new RequestParams();
+            params.put("username", usernameEditText.getText().toString());
+            params.put("password", passwordEditText.getText().toString());
             if(signUpMode){
                 //default
-                ServerConnect serverConnect = new ServerConnect();
-                serverConnect.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+//                ServerConnect serverConnect = new ServerConnect();
+//                serverConnect.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
+
 
                 //stretch
 //                ServerConnectRegister register = new ServerConnectRegister();
 //                register.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
 
+            client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
+                @Override
+                public void onStart() {
+                    // called before request is started
+                    System.out.println("STARTED");
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    //Test out the response with this
+                    System.out.println("ONSUCCESS");
+                    String s = new String(responseBody);
+                    System.out.println(s);
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                System.out.println("failure");
+                }
+
+                @Override
+                public void onRetry(int retryNo) {
+                    // called when request is retried
+                }
+            });
 
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
                 System.out.println("MADE IT LOGIN");
+                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
 
-//                ServerConnect serverConnect = new ServerConnect();
-//                Toast.makeText(LogSign.this, message, Toast.LENGTH_SHORT).show();
+
+                    @Override
+                    public void onStart() {
+                        // called before request is started
+                        System.out.println("STARTED");
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        //Test out the response with this
+                        System.out.println("ONSUCCESS");
+                        String s = new String(responseBody);
+                        System.out.println(s);
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        System.out.println("failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                    }
+                });
 
 
 
