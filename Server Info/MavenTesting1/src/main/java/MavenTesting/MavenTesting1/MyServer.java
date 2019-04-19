@@ -12,6 +12,6 @@ public class MyServer {
 	public static HashMap<String, String> users = new HashMap<String, String>();  
 
 	public static void main(String[] args) {
-		SpringApplication.run(MyServer.class, args);
+		SpringApplication.run(UserController.class, args);
 	}
 }

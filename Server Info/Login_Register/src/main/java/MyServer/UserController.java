@@ -13,9 +13,9 @@ import java.sql.*;
 @RestController
 public class UserController {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://localhost/DormDash";
+	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
-	static final String PASSWORD = "D0rmdash!";
+	static final String PASSWORD = "";
     static Connection conn = null;
     static PreparedStatement ps = null;
 
@@ -23,7 +23,7 @@ public class UserController {
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-		String selectTableSql = "SELECT password FROM users WHERE " + username + " = username;";
+		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "' ;";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
 
 
@@ -49,6 +49,7 @@ public class UserController {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			ps = conn.prepareStatement(selectTableSql);
+            System.out.println(selectTableSql);
 			ResultSet rs = ps.executeQuery();
 
 			//Checking if the hashmap contains the username trying to register and returns a BAD_REQUEST if username is taken
@@ -58,8 +59,10 @@ public class UserController {
 					ps = conn.prepareStatement(insertTableSql);
 					ps.setString(1, username);
 					ps.setString(2, hashedKey);
+                    ps.executeUpdate();
 
-			}
+
+            }
 			else {
 				return new ResponseEntity("{\"message\":\"username taken\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 			}
@@ -106,6 +109,23 @@ public class UserController {
             conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             ps = conn.prepareStatement(selectTableSql);
             rs = ps.executeQuery();
+            //Check if the hashmap contains the username trying to login
+            if (!rs.next()) {
+                return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+            }else {
+                //Retrieves the stored hashkey for the username logging in
+                try {
+                    storedHashedKey = rs.getString("password");
+                    //Compare the stored hashed key with the input hashedKey generated from the password parameter to validate the login
+                    if (storedHashedKey.equals(hashedKey)) {
+                        return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
+                    }
+
+                }
+                catch(SQLException se) {}
+
+
+            }
         }
         catch(ClassNotFoundException ce){
             ce.printStackTrace();
@@ -116,28 +136,9 @@ public class UserController {
             se.printStackTrace();
 
         }
+        return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
-        //Check if the hashmap contains the username trying to login
-    	if (!rs.next()) {
-			return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-		}else {
-            //Retrieves the stored hashkey for the username logging in
-			try {
-                storedHashedKey = rs.getString("password");
-            }
-            catch(SQLException se) {}
-		}
-            //Compare the stored hashed key with the input hashedKey generated from the password parameter to validate the login
-			if (storedHashedKey.equals(hashedKey)) {
-				return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
-			}else {
-				return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-			}
-
-
-
-
-	}
+    }
     
     //Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {

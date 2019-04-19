@@ -3,7 +3,7 @@ use DormDash;
 
 create table users (
 	username varchar(40) not null,
-	password varchar(64) not null,
+	password varchar(40) not null,
 	userID int not null,
 	facebookID int,
 	venmoID int,
@@ -12,7 +12,7 @@ create table users (
 
 create table workers (
 	username varchar(40) not null,
-	password varchar(64) not null,
+	password varchar(40) not null,
 	workerID int not null,
 	facebookID int,
 	venmoID int,
