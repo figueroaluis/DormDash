@@ -84,7 +84,7 @@ public class UserController {
 	public ResponseEntity<String> login(HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-        String selectTableSql = "SELECT password FROM users WHERE " + username + " = username;";
+        String selectTableSql = "SELECT password FROM users WHERE username = ' " + username + "' ;";
         ResultSet rs;
         String storedHashedKey;
 
