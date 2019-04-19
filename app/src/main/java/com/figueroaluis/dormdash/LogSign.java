@@ -65,30 +65,13 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
             Toast.makeText(LogSign.this, "A username and a password are required.", Toast.LENGTH_SHORT).show();
         } else{
-            // if the username or the password is in there, then we set them up
-            // this is the sign up call
-
-
-            //add registered user data to database
-//            InsertData data = new InsertData();
-//            data.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-
-
-            //Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
 
             //sign up module
             RequestParams params = new RequestParams();
             params.put("username", usernameEditText.getText().toString());
             params.put("password", passwordEditText.getText().toString());
             if(signUpMode){
-                //default
-//                ServerConnect serverConnect = new ServerConnect();
-//                serverConnect.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
 
-
-                //stretch
-//                ServerConnectRegister register = new ServerConnectRegister();
-//                register.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
 
             client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
