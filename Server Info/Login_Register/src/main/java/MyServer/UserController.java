@@ -15,7 +15,7 @@ public class UserController {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
-	static final String PASSWORD = "";
+	static final String PASSWORD = "D0rmdash!";
     static Connection conn = null;
     static PreparedStatement ps = null;
 
@@ -23,7 +23,7 @@ public class UserController {
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "' ;";
+		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
 
 
@@ -84,8 +84,7 @@ public class UserController {
 	public ResponseEntity<String> login(HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-        String selectTableSql = "SELECT password FROM users WHERE username = ' " + username + "' ;";
-        ResultSet rs;
+        String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
         String storedHashedKey;
 
 
@@ -108,11 +107,13 @@ public class UserController {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             ps = conn.prepareStatement(selectTableSql);
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             //Check if the hashmap contains the username trying to login
+
             if (!rs.next()) {
                 return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-            }else {
+            }
+            else {
                 //Retrieves the stored hashkey for the username logging in
                 try {
                     storedHashedKey = rs.getString("password");
