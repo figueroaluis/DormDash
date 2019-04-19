@@ -122,7 +122,7 @@ public class InsertData {
 	}
 	
 	
-	
+
 	public static void insertMenu() {
 		Connection conn = null;
 		PreparedStatement ps = null;
