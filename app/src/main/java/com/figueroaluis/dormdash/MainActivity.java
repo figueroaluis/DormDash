@@ -19,6 +19,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.i("Open Sign Up", "Was pressed");
             Intent intent = new Intent(MainActivity.this, LogSign.class);
             startActivity(intent);
+        } else if(view.getId() == R.id.imageButton_orders){
+            // open the screen to make an order
+            Log.i("Order page button", "Was pressed");
+            Intent intent = new Intent(MainActivity.this, OrderScreen.class);
+            startActivity(intent);
+        }
+        else if(view.getId() == R.id.imageButton_search){
+            // open the screen to make an order
+            Log.i("Search page button", "Was pressed");
+            Intent intent = new Intent(MainActivity.this, SearchScreen.class);
+            startActivity(intent);
         }
     }
 
@@ -71,29 +82,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         homeButton = (ImageButton) findViewById(R.id.imageButton_homebutton);
         homeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Home button works",
+                Toast.makeText(MainActivity.this, "This is the home screen",
                         Toast.LENGTH_SHORT).show();
             }
         });
 
-        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Search button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
         ordersButton = (ImageButton) findViewById(R.id.imageButton_orders);
-        ordersButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Orders button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        ordersButton.setOnClickListener(MainActivity.this);
 
         profileButton = (ImageButton) findViewById(R.id.imageButton_profile);
         profileButton.setOnClickListener(MainActivity.this);
 
+        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
+        searchButton.setOnClickListener(MainActivity.this);
+
     }
+
+
+    // to do
+    // need to implement a feature in which we have a constant bar at the bottom
+    // if we change the screen, it'll remain at the bottom regardless of whatever layout
+    // and as we scroll, the bottom bar will stay in place
 }
