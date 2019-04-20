@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LogSign" />
+        <activity android:name=".DetailedMarketplace"/>
     </application>
 
 

@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) { //method for what happens when you click, now just text appears
                 Toast.makeText(MainActivity.this, "Marketplace button works",
                         Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, DetailedMarketplace.class);
+                startActivity(intent);
             }
         });
 
