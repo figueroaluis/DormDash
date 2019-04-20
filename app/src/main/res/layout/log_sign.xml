@@ -53,14 +53,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_editText" />
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/signUp_button"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="74dp"
         android:layout_marginStart="128dp"
         android:layout_marginTop="27dp"
-        android:onClick="onSignUpClicked"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,6 +88,7 @@
         android:layout_marginEnd="36dp"
         android:layout_marginStart="10dp"
         android:text="or, Log In"
+        android:onClick="onClick"
         android:textAlignment="textStart"
         android:textColor="@android:color/holo_blue_light"
         android:textSize="14sp"

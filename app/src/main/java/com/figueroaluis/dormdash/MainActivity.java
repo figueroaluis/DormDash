@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         // open the sign up page
                     } else if(position==3){
                         // open the log/sign page
-                        selectedFragment = new FragmentProfile();
+                        selectedFragment = new FragmentLogSign();
                     } else{
                         Log.i("BOTTOM NAVIGATION BAR","Bug: one of the tabs is somehow not clicked");
                     }
