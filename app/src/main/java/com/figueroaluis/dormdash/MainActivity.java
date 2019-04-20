@@ -10,6 +10,7 @@ import android.util.Log;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
+
 public class MainActivity extends AppCompatActivity {
 
     // Navigation bar stuff
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentHome()).commit();
+
     }
 
 

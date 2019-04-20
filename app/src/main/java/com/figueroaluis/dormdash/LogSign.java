@@ -1,5 +1,6 @@
 package com.figueroaluis.dormdash;
 
+
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//begin asynch task library
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
+
+
 public class LogSign extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener{
 
     // check to see if we are in sign up or log in
@@ -21,6 +28,7 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
     TextView loginTextView;
     EditText usernameEditText;
     EditText passwordEditText;
+
 
 
     // implement a function that allows the button to open another view
@@ -52,21 +60,91 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
 
     // method to sign up
     public void onSignUpClicked(View view){
+        AsyncHttpClient client = new AsyncHttpClient();
         // make sure that we have both a username and a password
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
             Toast.makeText(LogSign.this, "A username and a password are required.", Toast.LENGTH_SHORT).show();
         } else{
-            // if the username or the password is in there, then we set them up
-            // this is the sign up call
-            Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
+
+            //sign up module
+            RequestParams params = new RequestParams();
+            params.put("username", usernameEditText.getText().toString());
+            params.put("password", passwordEditText.getText().toString());
             if(signUpMode){
+
+
+            client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    // called before request is started
+                    System.out.println("STARTED");
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    //Test out the response with this
+                    System.out.println("ONSUCCESS");
+                    String s = new String(responseBody);
+                    System.out.println(s);
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                System.out.println("failure");
+                }
+
+                @Override
+                public void onRetry(int retryNo) {
+                    // called when request is retried
+                }
+            });
+
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
+                System.out.println("MADE IT LOGIN");
+                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
+
+
+                    @Override
+                    public void onStart() {
+                        // called before request is started
+                        System.out.println("STARTED");
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        //Test out the response with this
+                        System.out.println("ONSUCCESS");
+                        String s = new String(responseBody);
+                        System.out.println(s);
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        System.out.println("failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                    }
+                });
+
+
+
+
             }
         }
 
     }
+
 
     @Override
     public boolean onKey(View view, int i, KeyEvent keyEvent){
@@ -102,4 +180,6 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
     }
 
 
+
 }
+
