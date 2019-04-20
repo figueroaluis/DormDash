@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<ScrollView
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,217 +8,246 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-        <ImageButton
-            android:id="@+id/imageButton_marketplace"
-            android:layout_width="400dp"
-            android:layout_height="165dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/market_place_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/market_place_pic" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_marketplace"-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="165dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/market_place_pic"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.4"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"-->
+            <!--app:srcCompat="@drawable/market_place_pic" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_cooler"
-            android:layout_width="400dp"
-            android:layout_height="165dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/cooler_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_marketplace"
-            app:srcCompat="@drawable/cooler_pic" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_cooler"-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="165dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/cooler_pic"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.4"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_marketplace"-->
+            <!--app:srcCompat="@drawable/cooler_pic" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_greenbean"
-            android:layout_width="400dp"
-            android:layout_height="165dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/green_bean_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_cooler"
-            app:srcCompat="@drawable/green_bean_pic" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_greenbean"-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="165dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/green_bean_pic"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.4"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_cooler"-->
+            <!--app:srcCompat="@drawable/green_bean_pic" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_coffeecart"
-            android:layout_width="400dp"
-            android:layout_height="165dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/coffee_cart_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_greenbean"
-            app:srcCompat="@drawable/coffee_cart_pic" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_coffeecart"-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="165dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/coffee_cart_pic"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintHorizontal_bias="0.4"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_greenbean"-->
+            <!--app:srcCompat="@drawable/coffee_cart_pic" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_homebutton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/home_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"
-            app:srcCompat="@drawable/home_icon" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_homebutton"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/home_icon"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"-->
+            <!--app:srcCompat="@drawable/home_icon" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_search"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/search_icon"
-            app:layout_constraintStart_toEndOf="@+id/imageButton_homebutton"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"
-            app:srcCompat="@drawable/search_icon" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_search"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginStart="50dp"-->
+            <!--android:layout_marginLeft="50dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/search_icon"-->
+            <!--app:layout_constraintStart_toEndOf="@+id/imageButton_homebutton"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"-->
+            <!--app:srcCompat="@drawable/search_icon" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_orders"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/orders_icon"
-            app:layout_constraintStart_toEndOf="@+id/imageButton_search"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"
-            app:srcCompat="@drawable/orders_icon" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_orders"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginStart="50dp"-->
+            <!--android:layout_marginLeft="50dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/orders_icon"-->
+            <!--app:layout_constraintStart_toEndOf="@+id/imageButton_search"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"-->
+            <!--app:srcCompat="@drawable/orders_icon" />-->
 
-        <ImageButton
-            android:id="@+id/imageButton_profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/background_light"
-            android:scaleType="fitXY"
-            android:src="@drawable/profile_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageButton_orders"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"
-            app:srcCompat="@drawable/profile_icon" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButton_profile"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginEnd="30dp"-->
+            <!--android:layout_marginStart="50dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:background="@android:color/background_light"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/profile_icon"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toEndOf="@+id/imageButton_orders"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/imageButton_coffeecart"-->
+            <!--app:srcCompat="@drawable/profile_icon" />-->
 
-        <TextView
-            android:id="@+id/marketplacetext"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Marketplace"
-            android:textSize="30sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton_marketplace"
-            app:layout_constraintEnd_toEndOf="@+id/imageButton_marketplace"
-            app:layout_constraintStart_toStartOf="@+id/imageButton_marketplace"
-            app:layout_constraintTop_toTopOf="@+id/imageButton_marketplace" />
+        <!--<TextView-->
+            <!--android:id="@+id/marketplacetext"-->
+            <!--android:layout_width="170dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:text="Marketplace"-->
+            <!--android:textSize="30sp"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:gravity="center"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/imageButton_marketplace"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/imageButton_marketplace"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/imageButton_marketplace"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/imageButton_marketplace" />-->
 
-        <TextView
-            android:id="@+id/coolertext"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="Cooler"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton_cooler"
-            app:layout_constraintEnd_toEndOf="@+id/imageButton_cooler"
-            app:layout_constraintStart_toStartOf="@+id/imageButton_cooler"
-            app:layout_constraintTop_toTopOf="@+id/imageButton_cooler" />
+        <!--<TextView-->
+            <!--android:id="@+id/coolertext"-->
+            <!--android:layout_width="170dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="Cooler"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="30sp"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/imageButton_cooler"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/imageButton_cooler"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/imageButton_cooler"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/imageButton_cooler" />-->
 
-        <TextView
-            android:id="@+id/greenbeantext"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Green Bean"
-            android:textSize="30sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/imageButton_coffeecart"
-            app:layout_constraintEnd_toEndOf="@+id/imageButton_greenbean"
-            app:layout_constraintStart_toStartOf="@+id/imageButton_greenbean"
-            app:layout_constraintTop_toTopOf="@+id/imageButton_greenbean" />
+        <!--<TextView-->
+            <!--android:id="@+id/greenbeantext"-->
+            <!--android:layout_width="170dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:text="Green Bean"-->
+            <!--android:textSize="30sp"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:gravity="center"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/imageButton_coffeecart"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/imageButton_greenbean"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/imageButton_greenbean"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/imageButton_greenbean" />-->
 
-        <TextView
-            android:id="@+id/coffeecarttext"
-            android:layout_width="170dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Coffee Cart"
-            android:textSize="30sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton_coffeecart"
-            app:layout_constraintEnd_toEndOf="@+id/imageButton_coffeecart"
-            app:layout_constraintStart_toStartOf="@+id/imageButton_coffeecart"
-            app:layout_constraintTop_toTopOf="@+id/imageButton_coffeecart" />
+        <!--<TextView-->
+            <!--android:id="@+id/coffeecarttext"-->
+            <!--android:layout_width="170dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:text="Coffee Cart"-->
+            <!--android:textSize="30sp"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:gravity="center"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/imageButton_coffeecart"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/imageButton_coffeecart"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/imageButton_coffeecart"-->
+            <!--app:layout_constraintTop_toTopOf="@+id/imageButton_coffeecart" />-->
+    <!--</android.support.constraint.ConstraintLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/main_coord_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center">-->
+
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/main_viewPager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+        <!--</android.support.v4.view.ViewPager>-->
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_navigation"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/windowBackground"/>
 
 
+    <!--</LinearLayout>-->
 
-    </android.support.constraint.ConstraintLayout>
 
-
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>
 
 

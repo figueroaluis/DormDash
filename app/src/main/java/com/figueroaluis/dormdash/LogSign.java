@@ -76,9 +76,6 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
         return false;
     }
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
