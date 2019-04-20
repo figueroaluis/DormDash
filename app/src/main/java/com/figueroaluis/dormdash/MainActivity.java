@@ -1,109 +1,82 @@
 package com.figueroaluis.dormdash;
 
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-    //tester onClick to open up the sign in page
-    @Override
-    public void onClick(View view){
-        if(view.getId() == R.id.imageButton_profile){
-            // log for us to check
-            Log.i("Open Sign Up", "Was pressed");
-            Intent intent = new Intent(MainActivity.this, LogSign.class);
-            startActivity(intent);
-        } else if(view.getId() == R.id.imageButton_orders){
-            // open the screen to make an order
-            Log.i("Order page button", "Was pressed");
-            Intent intent = new Intent(MainActivity.this, OrderScreen.class);
-            startActivity(intent);
-        }
-        else if(view.getId() == R.id.imageButton_search){
-            // open the screen to make an order
-            Log.i("Search page button", "Was pressed");
-            Intent intent = new Intent(MainActivity.this, SearchScreen.class);
-            startActivity(intent);
-        }
-    }
 
-    ImageButton marketPlaceButton;
-    ImageButton coolerButton;
-    ImageButton greenBeanButton;
-    ImageButton coffeeCartButton;
-    ImageButton homeButton;
-    ImageButton searchButton;
-    ImageButton ordersButton;
-    ImageButton profileButton;
+public class MainActivity extends AppCompatActivity {
+
+    // Navigation bar stuff
+    AHBottomNavigation bottomNavigation;
+    AHBottomNavigationItem homeButton_navBar;
+    AHBottomNavigationItem searchButton_navBar;
+    AHBottomNavigationItem ordersButton_navBar;
+    AHBottomNavigationItem profile_navBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        marketPlaceButton = (ImageButton) findViewById(R.id.imageButton_marketplace);
-        marketPlaceButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Marketplace button works",
-                        Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, DetailedMarketplace.class);
-                startActivity(intent);
-            }
-        });
+        // bottom view stuff
+        bottomNavigation = findViewById(R.id.bottom_navigation);
 
-        coolerButton = (ImageButton) findViewById(R.id.imageButton_cooler);
-        coolerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Cooler button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        homeButton_navBar = new AHBottomNavigationItem("Home", R.drawable.home_icon);
+        searchButton_navBar = new AHBottomNavigationItem("Search",R.drawable.search_icon);
+        ordersButton_navBar = new AHBottomNavigationItem("Orders",R.drawable.orders_icon);
+        profile_navBar = new AHBottomNavigationItem("Profile",R.drawable.profile_icon);
 
-        greenBeanButton = (ImageButton) findViewById(R.id.imageButton_greenbean);
-        greenBeanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Green Bean button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        bottomNavigation.addItem(homeButton_navBar);
+        bottomNavigation.addItem(searchButton_navBar);
+        bottomNavigation.addItem(ordersButton_navBar);
+        bottomNavigation.addItem(profile_navBar);
 
-        coffeeCartButton = (ImageButton) findViewById(R.id.imageButton_coffeecart);
-        coffeeCartButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "Coffee Cart button works",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
 
-        homeButton = (ImageButton) findViewById(R.id.imageButton_homebutton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { //method for what happens when you click, now just text appears
-                Toast.makeText(MainActivity.this, "This is the home screen",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        bottomNavigation.setAccentColor(Color.parseColor("#F5681E"));
+        bottomNavigation.setForceTint(true);
 
+        bottomNavigation.setOnTabSelectedListener(navListener);
 
-        ordersButton = (ImageButton) findViewById(R.id.imageButton_orders);
-        ordersButton.setOnClickListener(MainActivity.this);
-
-        profileButton = (ImageButton) findViewById(R.id.imageButton_profile);
-        profileButton.setOnClickListener(MainActivity.this);
-
-        searchButton = (ImageButton) findViewById(R.id.imageButton_search);
-        searchButton.setOnClickListener(MainActivity.this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentHome()).commit();
 
     }
 
 
-    // to do
-    // need to implement a feature in which we have a constant bar at the bottom
-    // if we change the screen, it'll remain at the bottom regardless of whatever layout
-    // and as we scroll, the bottom bar will stay in place
+    private AHBottomNavigation.OnTabSelectedListener navListener =
+            new AHBottomNavigation.OnTabSelectedListener() {
+                @Override
+                public boolean onTabSelected(int position, boolean wasSelected) {
+                    // position tells you which tab was selected
+                    // wasSelected tells you if the tab is currently selected
+                    System.out.println(position);
+                    System.out.println(wasSelected);
+                    Fragment selectedFragment = null;
+                    if(position==0) {
+                        selectedFragment = new FragmentHome();
+                    }else if(position==1){
+                        selectedFragment = new FragmentSearch();
+                    } else if(position==2){
+                        // open the sign up page
+                    } else if(position==3){
+                        // open the log/sign page
+                        selectedFragment = new FragmentProfile();
+                    } else{
+                        Log.i("BOTTOM NAVIGATION BAR","Bug: one of the tabs is somehow not clicked");
+                    }
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    return true;
+                }
+
+            };
+
 }
+
