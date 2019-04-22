@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_home">
+
+
+    <Button
+        android:id="@+id/marketplace_button"
+        android:layout_marginTop="5dp"
+        android:layout_width="375dp"
+        android:layout_height="130dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="Marketplace"
+        android:background="@drawable/market_place_pic"
+        android:scaleType="fitXY"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/cooler_button"
+        android:layout_width="375dp"
+        android:layout_height="130dp"
+        android:layout_below="@+id/marketplace_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="Tiger Cooler"
+        android:adjustViewBounds="true"
+        android:background="@drawable/cooler_pic"
+        android:scaleType="fitXY"
+        android:textColor="#FFFFFF"/>
+
+    <Button
+        android:id="@+id/greenbean_button"
+        android:layout_width="375dp"
+        android:layout_height="130dp"
+        android:layout_below="@+id/cooler_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="Green Bean"
+        android:background="@drawable/green_bean_pic"
+        android:textColor="#FFFFFF"/>
+
+    <Button
+        android:id="@+id/coffeecart_button"
+        android:layout_width="375dp"
+        android:layout_height="130dp"
+        android:layout_below="@+id/greenbean_button"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/coffee_cart_pic"
+        android:text="Coffee Cart"
+        android:textColor="#FFFFFF"/>
+
+</RelativeLayout>

@@ -122,8 +122,82 @@ public class InsertData {
 	}
 	
 	
+
+	public static void insertMenu() {
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		//open connection
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+			String dayOfWeek = "";
+			String food = "";
+
+			String addFood = "INSERT INTO menu (dayOfWeek, foodItem) values(?, ?)";
+			ps = conn.prepareStatement(addFood);
+
+			ps.setString(1, dayOfWeek);
+			ps.setString(2, food);
+			
+			ps.executeUpdate();
+			
+			ps.close();
+			conn.close();
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 	public static void addOrders() {
-		
+		Connection conn = null;
+		PreparedStatement ps = null;
+
+		//open connection
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+			int userID = 0;
+			int workerID = 0;
+			int orderID = 0;
+			String foodOrder = "";
+			String orderPickupLocation = "";
+			String pickupTime = "";
+			
+
+			String insertOrder = "INSERT INTO orders (userID, workerID, orderID, foodOrder, orderPickupLocation,"
+					+ "pickupTime) values(?, ?, ?, ?, ?, ?)";
+			ps = conn.prepareStatement(insertOrder);
+
+			ps.setInt(1, userID);
+			ps.setInt(2, workerID);
+			ps.setInt(3, orderID);
+			ps.setString(4, foodOrder);
+			ps.setString(5, orderPickupLocation);
+			ps.setString(6, pickupTime);
+			
+			ps.executeUpdate();
+			
+			ps.close();
+			conn.close();
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
