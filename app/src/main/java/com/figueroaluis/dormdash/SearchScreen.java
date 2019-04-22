@@ -1,7 +1,6 @@
 package com.figueroaluis.dormdash;
 
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,7 @@ public class SearchScreen extends AppCompatActivity implements View.OnClickListe
         if(view.getId() == R.id.imageButton_profile) {
             // log for us to check
             Log.i("Open Sign Up", "Was pressed");
-            Intent intent = new Intent(SearchScreen.this, LogSign.class);
+            Intent intent = new Intent(SearchScreen.this, FragmentLogSign.class);
             startActivity(intent);
         }
         else if(view.getId() == R.id.imageButton_homebutton) {

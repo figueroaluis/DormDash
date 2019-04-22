@@ -18,7 +18,7 @@ public class OrderScreen extends AppCompatActivity implements View.OnClickListen
         if(view.getId() == R.id.imageButton_profile) {
             // log for us to check
             Log.i("Open Sign Up", "Was pressed");
-            Intent intent = new Intent(OrderScreen.this, LogSign.class);
+            Intent intent = new Intent(OrderScreen.this, FragmentLogSign.class);
             startActivity(intent);
         }
         else if(view.getId() == R.id.imageButton_homebutton) {
