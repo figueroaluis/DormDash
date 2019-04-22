@@ -27,24 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
         // bottom view stuff
         bottomNavigation = findViewById(R.id.bottom_navigation);
-
         homeButton_navBar = new AHBottomNavigationItem("Home", R.drawable.home_icon);
         searchButton_navBar = new AHBottomNavigationItem("Search",R.drawable.search_icon);
         ordersButton_navBar = new AHBottomNavigationItem("Orders",R.drawable.orders_icon);
         profile_navBar = new AHBottomNavigationItem("Profile",R.drawable.profile_icon);
-
         bottomNavigation.addItem(homeButton_navBar);
         bottomNavigation.addItem(searchButton_navBar);
         bottomNavigation.addItem(ordersButton_navBar);
         bottomNavigation.addItem(profile_navBar);
-
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-
         bottomNavigation.setAccentColor(Color.parseColor("#F5681E"));
         bottomNavigation.setForceTint(true);
-
         bottomNavigation.setOnTabSelectedListener(navListener);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentHome()).commit();
 
     }
