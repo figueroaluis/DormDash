@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrderScreen">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/orderedittext"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="72dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="Please type your order"
+            android:inputType="text"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/placebutton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="Place"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orderedittext" />
+
+        <ImageButton
+            android:id="@+id/imageButton_homebutton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="475dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:scaleType="fitXY"
+            android:src="@drawable/home_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/placebutton"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/home_icon" />
+
+        <ImageButton
+            android:id="@+id/imageButton_search"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:scaleType="fitXY"
+            android:src="@drawable/search_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButton_homebutton"
+            app:layout_constraintTop_toBottomOf="@+id/placebutton"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/search_icon" />
+
+        <ImageButton
+            android:id="@+id/imageButton_orders"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:scaleType="fitXY"
+            android:src="@drawable/orders_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButton_search"
+            app:layout_constraintTop_toBottomOf="@+id/placebutton"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/orders_icon" />
+
+        <ImageButton
+            android:id="@+id/imageButton_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/background_light"
+            android:scaleType="fitXY"
+            android:src="@drawable/profile_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toEndOf="@+id/imageButton_orders"
+            app:layout_constraintTop_toBottomOf="@+id/placebutton"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/profile_icon" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+</ScrollView>

@@ -4,21 +4,12 @@ use DormDash;
 create table users (
 	username varchar(40) not null,
 	password varchar(64) not null,
-	userID int not null,
 	facebookID int,
 	venmoID int,
 	phoneNumber varchar(15),
-	primary key(userID));
-
-create table workers (
-	username varchar(40) not null,
-	password varchar(64) not null,
-	workerID int not null,
-	facebookID int,
-	venmoID int,
-	phoneNumber varchar(15),
-	isWorking boolean,
-	primary key(workerID));
+	is_registered_worker boolean,
+	is_working boolean default false,
+	primary key(username));
 
 create table menu (
 	dayOfWeek varchar(10),
@@ -31,8 +22,7 @@ create table locations (
 	primary key(buildingName));
 
 create table orders (
-	userID int,
-	workerID int,
+	username varchar(40) not null,
 	orderID int not null,
 	foodOrder varchar(50),
 	orderPickupLocation varchar(40),
@@ -40,7 +30,7 @@ create table orders (
 	pickupTime time,
 	dropoffTime time,
 	primary key(orderID),
-	foreign key(userID) references users(userID),
+	foreign key(username) references users(username),
 	foreign key(workerID) references workers(workerID),
 	foreign key(orderPickupLocation) references locations(buildingName),
 	foreign key(orderDropoffLocation) references locations(buildingName));

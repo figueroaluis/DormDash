@@ -2,25 +2,34 @@ package com.figueroaluis.dormdash;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//begin asynch task library
+//things for loopj/asynch http requests
 import com.loopj.android.http.*;
-
 import cz.msebera.android.httpclient.Header;
 
 
-public class LogSign extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener{
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
+
+//begin asynch task library
+
+
+public class FragmentLogSign extends Fragment implements View.OnClickListener, View.OnKeyListener{
 
     // check to see if we are in sign up or log in
     Boolean signUpMode = true;
@@ -28,7 +37,7 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
     TextView loginTextView;
     EditText usernameEditText;
     EditText passwordEditText;
-
+    AppCompatButton signUpButton;
 
 
     // implement a function that allows the button to open another view
@@ -37,9 +46,12 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
         // check that it's the proper view
         if(view.getId() == R.id.logIn_textView){
             // log for us to keep track of it
+            System.out.println(view.getId());
+            System.out.println(R.id.logIn_textView);
             Log.i("Switch", "Was tapped");
 
-            Button signUpButton = findViewById(R.id.signUp_button);
+            signUpButton = getView().findViewById(R.id.signUp_button);
+
 
             if(signUpMode){
                 // if they are in sign up mode, then we should switch to the other view
@@ -53,8 +65,8 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
                 loginTextView.setText("or, Log In");
             }
         } else if(view.getId() == R.id.dormdash_logo || view.getId() == R.id.logSign_backgroundLayout){
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
         }
     }
 
@@ -63,35 +75,18 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
         AsyncHttpClient client = new AsyncHttpClient();
         // make sure that we have both a username and a password
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
-            Toast.makeText(LogSign.this, "A username and a password are required.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "A username and a password are required.", Toast.LENGTH_SHORT).show();
         } else{
-            // if the username or the password is in there, then we set them up
-            // this is the sign up call
 
-
-            //add registered user data to database
-//            InsertData data = new InsertData();
-//            data.registerUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-
-
-            //Toast.makeText(LogSign.this, "A username and a password have been given.", Toast.LENGTH_SHORT).show();
 
             //sign up module
             RequestParams params = new RequestParams();
             params.put("username", usernameEditText.getText().toString());
             params.put("password", passwordEditText.getText().toString());
             if(signUpMode){
-                //default
-//                ServerConnect serverConnect = new ServerConnect();
-//                serverConnect.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
 
-
-                //stretch
-//                ServerConnectRegister register = new ServerConnectRegister();
-//                register.execute(usernameEditText.getText().toString(),passwordEditText.getText().toString());
 
             client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
-
                 @Override
                 public void onStart() {
                     // called before request is started
@@ -105,8 +100,6 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
                     System.out.println("ONSUCCESS");
                     String s = new String(responseBody);
                     System.out.println(s);
-
-
                 }
 
                 @Override
@@ -124,8 +117,10 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
             }else{
                 // this means that they are in Log in mode, so we should log them in
                 System.out.println("MADE IT LOGIN");
-                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
 
+
+
+                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
 
                     @Override
                     public void onStart() {
@@ -140,7 +135,6 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
                         System.out.println("ONSUCCESS");
                         String s = new String(responseBody);
                         System.out.println(s);
-
                     }
 
                     @Override
@@ -155,11 +149,8 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
                 });
 
 
-
-
             }
         }
-
     }
 
 
@@ -172,34 +163,40 @@ public class LogSign extends AppCompatActivity implements View.OnClickListener, 
     }
 
 
-
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.log_sign);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // inflate the layout
+        View view = inflater.inflate(R.layout.log_sign, container, false);
 
+        // sign up button
+        signUpButton = view.findViewById(R.id.signUp_button);
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSignUpClicked(view);
+            }
+        });
 
         // access the textview of log in
-        loginTextView = findViewById(R.id.logIn_textView);
+        loginTextView = view.findViewById(R.id.logIn_textView);
         loginTextView.setOnClickListener(this);
+
         // get access to the edit texts in the log in page
-        usernameEditText = findViewById(R.id.username_editText);
-        passwordEditText = findViewById(R.id.password_editText);
-        ImageView logoImageView = findViewById(R.id.dormdash_logo);
-        ConstraintLayout backgroundLayout = findViewById(R.id.logSign_backgroundLayout);
+        usernameEditText = view.findViewById(R.id.username_editText);
+        passwordEditText = view.findViewById(R.id.password_editText);
+        ImageView logoImageView = view.findViewById(R.id.dormdash_logo);
+        ConstraintLayout backgroundLayout = view.findViewById(R.id.logSign_backgroundLayout);
+
         // getting rid of the keyboard, clicking elsewhere
-        logoImageView.setOnClickListener(LogSign.this);
-        backgroundLayout.setOnClickListener(LogSign.this);
+        logoImageView.setOnClickListener(FragmentLogSign.this);
+        backgroundLayout.setOnClickListener(FragmentLogSign.this);
 
         // if we click on enter on the keyboard and then disappear the keyboard
         // it allows us to log in
-        passwordEditText.setOnKeyListener(LogSign.this);
+        passwordEditText.setOnKeyListener(FragmentLogSign.this);
 
-
+        return view;
     }
-
-
-
 }
 
