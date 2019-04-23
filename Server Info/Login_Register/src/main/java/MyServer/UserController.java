@@ -9,6 +9,8 @@ import javax.xml.transform.Result;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Random;
+
 
 @RestController
 public class UserController {
@@ -41,6 +43,8 @@ public class UserController {
 			digest = MessageDigest.getInstance("SHA-256"); //digest algorithm set to SHA-256
             //Converts the password to SHA-256 bytes. Then the bytes are converted to hexadecimal with the helper method written below
 			hashedKey = bytesToHex(digest.digest(password.getBytes("UTF-8")));
+			System.out.println(hashedKey);
+
 
 		}catch(Exception e) {
 
@@ -140,6 +144,32 @@ public class UserController {
         return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
     }
+	@RequestMapping(value = "/order", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
+	public ResponseEntity<String> order(@RequestBody String body, HttpServletRequest request) {
+		//username varchar(40) not null,
+//	orderID int not null,
+//	foodOrder varchar(50),
+//	orderPickupLocation varchar(40),
+//	orderDropoffLocation varchar(40),
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+
+		String order = request.getParameter("foodOrder");
+		Random random = new Random();
+		String OrderID = String.valueOf(random.ints(0,10000));
+		String orderPickupLocation = request.getParameter("orderPickupLocation");
+		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+
+
+		//String insertTableSql = "Insert Into Orders."
+
+		return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+
     
     //Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {

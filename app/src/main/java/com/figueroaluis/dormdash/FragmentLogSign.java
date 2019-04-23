@@ -18,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
+//things for loopj/asynch http requests
+import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.Header;
+
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -83,9 +85,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             params.put("password", passwordEditText.getText().toString());
             if(signUpMode){
 
-            /*
+
+//            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
             client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
-                @Override
+
+                    @Override
                 public void onStart() {
                     // called before request is started
                     System.out.println("STARTED");
@@ -110,16 +114,16 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     // called when request is retried
                 }
             });
-            */
+
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
                 System.out.println("MADE IT LOGIN");
 
 
-                /*
-                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
 
+                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
+//                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         // called before request is started
@@ -145,7 +149,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         // called when request is retried
                     }
                 });
-                */
+
 
             }
         }
