@@ -33,4 +33,7 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.9'
     //expandable textview
     implementation 'at.blogc:expandabletextview:1.0.5'
+    //add jsoup for webscraping
+    implementation 'org.jsoup:jsoup:1.10.3'
+
 }
