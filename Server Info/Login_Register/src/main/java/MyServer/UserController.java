@@ -43,6 +43,8 @@ public class UserController {
 			digest = MessageDigest.getInstance("SHA-256"); //digest algorithm set to SHA-256
             //Converts the password to SHA-256 bytes. Then the bytes are converted to hexadecimal with the helper method written below
 			hashedKey = bytesToHex(digest.digest(password.getBytes("UTF-8")));
+			System.out.println(hashedKey);
+
 
 		}catch(Exception e) {
 

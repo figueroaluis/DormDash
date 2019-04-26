@@ -86,8 +86,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             if(signUpMode){
 
 
+//            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
             client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
-                @Override
+
+                    @Override
                 public void onStart() {
                     // called before request is started
                     System.out.println("STARTED");
@@ -121,7 +123,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
                 client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
-
+//                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         // called before request is started
