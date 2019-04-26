@@ -12,9 +12,10 @@ create table users (
 	primary key(username));
 
 create table menu (
-	dayOfWeek varchar(10),
-	foodItem varchar(50),
-	primary key(dayOfWeek));
+	date varchar(15),
+	foodItem varchar(100),
+	mealType varchar(20),
+	primary key(foodItem, mealType));
 
 create table locations (
 	buildingName varchar(40) not null,
@@ -31,7 +32,6 @@ create table orders (
 	dropoffTime time,
 	primary key(orderID),
 	foreign key(username) references users(username),
-	foreign key(workerID) references workers(workerID),
 	foreign key(orderPickupLocation) references locations(buildingName),
 	foreign key(orderDropoffLocation) references locations(buildingName));
 
