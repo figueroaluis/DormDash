@@ -191,7 +191,7 @@ public class UserController {
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
 
 	}
-
+	@RequestMapping(value = "/cancelorder", method = RequestMethod.GET)
 	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
 
 		//username varchar(40) not null,
