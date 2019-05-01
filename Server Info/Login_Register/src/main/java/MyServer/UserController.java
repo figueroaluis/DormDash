@@ -9,6 +9,8 @@ import javax.xml.transform.Result;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Random;
+
 
 @RestController
 public class UserController {
@@ -16,6 +18,7 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
+	static final String SAMPASSWORD = "Matosabe4";
 	static Connection conn = null;
 	static PreparedStatement ps = null;
 
@@ -41,6 +44,8 @@ public class UserController {
 			digest = MessageDigest.getInstance("SHA-256"); //digest algorithm set to SHA-256
 			//Converts the password to SHA-256 bytes. Then the bytes are converted to hexadecimal with the helper method written below
 			hashedKey = bytesToHex(digest.digest(password.getBytes("UTF-8")));
+			System.out.println(hashedKey);
+
 
 		}catch(Exception e) {
 
@@ -140,6 +145,148 @@ public class UserController {
 		return new ResponseEntity("{\"message\":\"username/password combination is incorrect\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
 	}
+	@RequestMapping(value = "/order", method = RequestMethod.POST) // <-- setup the endpoint URL at /order with the HTTP POST method
+	public ResponseEntity<String> order(@RequestBody String body, HttpServletRequest request) {
+
+		//username varchar(40) not null,
+//	orderID int not null,
+//	foodOrder varchar(50),
+//	orderPickupLocation varchar(40),
+//	orderDropoffLocation varchar(40),
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		String username = request.getParameter("username");
+		String order = request.getParameter("foodOrder");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "INSERT INTO orders(username,foodOrder) VALUES (?,?)";
+//		String orderPickupLocation = request.getParameter("orderPickupLocation");
+//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+		try {
+
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+
+			//get correct username
+			ps = conn.prepareStatement(selectUsername);
+			System.out.println(selectUsername);
+			ResultSet rs = ps.executeQuery();
+
+			//put on database
+
+			ps = conn.prepareStatement(insertSql);
+			ps.setString(1, username);
+			ps.setString(2, order);
+			ps.executeUpdate();
+
+
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+		}
+
+		//String insertTableSql = "Insert Into Orders."
+
+		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
+
+	}
+	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
+	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
+
+		//username varchar(40) not null,
+//	orderID int not null,
+//	foodOrder varchar(50),
+//	orderPickupLocation varchar(40),
+//	orderDropoffLocation varchar(40),
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		String username = request.getParameter("username");
+		String order = request.getParameter("foodOrder");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+//		String orderPickupLocation = request.getParameter("orderPickupLocation");
+//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+		try {
+
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+
+			//get correct username
+			ps = conn.prepareStatement(selectUsername);
+			System.out.println(selectUsername);
+			ResultSet rs = ps.executeQuery();
+
+			//put on database
+
+			ps = conn.prepareStatement(insertSql);
+			ps.executeUpdate();
+
+
+
+		} catch(ClassNotFoundException cne) {
+			System.out.println("Class Not Found Exception");
+		} catch (SQLException se) {
+			System.out.println("SQL Exception");
+		}
+
+		//String insertTableSql = "Insert Into Orders."
+
+		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/acceptorder", method = RequestMethod.POST)
+	public ResponseEntity<String> acceptorder(@RequestBody String body, HttpServletRequest request) {
+
+		//username varchar(40) not null,
+//	orderID int not null,
+//	foodOrder varchar(50),
+//	orderPickupLocation varchar(40),
+//	orderDropoffLocation varchar(40),
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		String username = request.getParameter("username");
+		String order = request.getParameter("foodOrder");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "UPDATE users SET orderaccepted = '" + order + "' WHERE username = '" + username + "';";
+//		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+//		String orderPickupLocation = request.getParameter("orderPickupLocation");
+//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+		try {
+
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+
+			//get correct username
+			ps = conn.prepareStatement(selectUsername);
+			System.out.println(selectUsername);
+			ResultSet rs = ps.executeQuery();
+
+			//put on database
+
+			//ps = conn.prepareStatement(insertSql);
+			ps.executeUpdate();
+
+
+
+		} catch(ClassNotFoundException cne) {
+			System.out.println("Class Not Found Exception");
+		} catch (SQLException se) {
+			System.out.println("SQL Exception");
+		}
+
+		//String insertTableSql = "Insert Into Orders."
+
+		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+
 
 	//Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {
