@@ -191,7 +191,7 @@ public class UserController {
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
 
 	}
-	@RequestMapping(value = "/cancelorder", method = RequestMethod.GET)
+	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
 	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
 
 		//username varchar(40) not null,
@@ -205,7 +205,7 @@ public class UserController {
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "DELETE from orders WHERE username = "+ selectUsername + " AND foodOrder = " + order;
+		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
 //		String orderPickupLocation = request.getParameter("orderPickupLocation");
 //		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
 
@@ -226,8 +226,57 @@ public class UserController {
 
 
 
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
+		} catch(ClassNotFoundException cne) {
+			System.out.println("Class Not Found Exception");
+		} catch (SQLException se) {
+			System.out.println("SQL Exception");
+		}
+
+		//String insertTableSql = "Insert Into Orders."
+
+		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/acceptorder", method = RequestMethod.POST)
+	public ResponseEntity<String> acceptorder(@RequestBody String body, HttpServletRequest request) {
+
+		//username varchar(40) not null,
+//	orderID int not null,
+//	foodOrder varchar(50),
+//	orderPickupLocation varchar(40),
+//	orderDropoffLocation varchar(40),
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		String username = request.getParameter("username");
+		String order = request.getParameter("foodOrder");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+//		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+//		String orderPickupLocation = request.getParameter("orderPickupLocation");
+//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+		try {
+
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+
+			//get correct username
+			ps = conn.prepareStatement(selectUsername);
+			System.out.println(selectUsername);
+			ResultSet rs = ps.executeQuery();
+
+			//put on database
+
+			//ps = conn.prepareStatement(insertSql);
+			ps.executeUpdate();
+
+
+
+		} catch(ClassNotFoundException cne) {
+			System.out.println("Class Not Found Exception");
+		} catch (SQLException se) {
+			System.out.println("SQL Exception");
 		}
 
 		//String insertTableSql = "Insert Into Orders."

@@ -9,6 +9,7 @@ create table users (
 	phoneNumber varchar(15),
 	is_registered_worker boolean,
 	is_working boolean default false,
+	orderAccepted varchar(100),
 	primary key(username));
 
 create table menu (
