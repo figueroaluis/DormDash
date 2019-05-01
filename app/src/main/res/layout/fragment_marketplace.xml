@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/price_text"
         />
-        
+
 
 
 

@@ -3,7 +3,7 @@ use DormDash;
 
 create table users (
 	username varchar(40) not null,
-	password blob not null,
+	password varchar(512) not null,
 	facebookID int,
 	venmoID int,
 	phoneNumber varchar(15),
