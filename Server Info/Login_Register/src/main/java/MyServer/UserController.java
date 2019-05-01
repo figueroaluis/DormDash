@@ -252,7 +252,6 @@ public class UserController {
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "UPDATE users SET orderaccepted = '" + order + "' WHERE username = '" + username + "';";
 //		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
 //		String orderPickupLocation = request.getParameter("orderPickupLocation");
 //		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
@@ -285,6 +284,7 @@ public class UserController {
 		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
 
 	}
+
 
 
 
