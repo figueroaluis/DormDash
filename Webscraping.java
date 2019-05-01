@@ -24,7 +24,7 @@ public class Webscraping {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash_db";
 	static final String USER = "root";
-	static final String PASSWORD = "Carol13Uc";
+	static final String PASSWORD = "    ";
 
 
 	public static void insertMenu() {
