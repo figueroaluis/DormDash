@@ -251,10 +251,7 @@ public class UserController {
 
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-//		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
-//		String orderPickupLocation = request.getParameter("orderPickupLocation");
-//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+		String selectSql = "Select orderID FROM orders WHERE order = '" + order + "';";
 
 		try {
 
@@ -262,13 +259,18 @@ public class UserController {
 			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
 
 			//get correct username
-			ps = conn.prepareStatement(selectUsername);
-			System.out.println(selectUsername);
+			ps = conn.prepareStatement(selectSql);
+			System.out.println(selectSql);
 			ResultSet rs = ps.executeQuery();
+
+			int id = rs.getInt("orderID");
+			System.out.println("orderID: " + id);
+
+			String insertSql = "UPDATE users SET orderAccepted = " + id + "WHERE username = '" + username + "';";
 
 			//put on database
 
-			//ps = conn.prepareStatement(insertSql);
+			ps = conn.prepareStatement(insertSql);
 			ps.executeUpdate();
 
 
@@ -281,7 +283,7 @@ public class UserController {
 
 		//String insertTableSql = "Insert Into Orders."
 
-		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
 
 	}
 
