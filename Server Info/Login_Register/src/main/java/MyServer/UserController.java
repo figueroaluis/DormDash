@@ -19,8 +19,13 @@ public class UserController {
 	static final String USER = "root";
 	static final String PASSWORD = "";
 	static final String SAMPASSWORD = "Matosabe4";
+<<<<<<< HEAD
 	static Connection conn = null;
 	static PreparedStatement ps = null;
+=======
+    static Connection conn = null;
+    static PreparedStatement ps = null;
+>>>>>>> bottombar
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
@@ -202,10 +207,19 @@ public class UserController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 
+<<<<<<< HEAD
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+=======
+<<<<<<< Updated upstream
+=======
+		String username = request.getParameter("username");
+		String order = request.getParameter("foodOrder");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "INSERT INTO orders(username,foodOrder) VALUES (?,?)";
+>>>>>>> bottombar
 //		String orderPickupLocation = request.getParameter("orderPickupLocation");
 //		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
 
@@ -222,24 +236,42 @@ public class UserController {
 			//put on database
 
 			ps = conn.prepareStatement(insertSql);
+<<<<<<< HEAD
+=======
+			ps.setString(1, username);
+			ps.setString(2, order);
+>>>>>>> bottombar
 			ps.executeUpdate();
 
 
 
+<<<<<<< HEAD
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
 		} catch (SQLException se) {
 			System.out.println("SQL Exception");
+=======
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+>>>>>>> bottombar
 		}
 
 		//String insertTableSql = "Insert Into Orders."
 
+<<<<<<< HEAD
 		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "/acceptorder", method = RequestMethod.POST)
 	public ResponseEntity<String> acceptorder(@RequestBody String body, HttpServletRequest request) {
+=======
+		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
+
+	}
+    @RequestMapping(value = "/cancelorder", method = RequestMethod.GET)
+	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
+>>>>>>> bottombar
 
 		//username varchar(40) not null,
 //	orderID int not null,
@@ -248,12 +280,30 @@ public class UserController {
 //	orderDropoffLocation varchar(40),
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> bottombar
 
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
+<<<<<<< HEAD
 		String selectSql = "Select orderID FROM orders WHERE order = '" + order + "';";
 
 		try {
+=======
+<<<<<<< Updated upstream
+		Random random = new Random();
+		String OrderID = String.valueOf(random.ints(0,10000));
+		String orderPickupLocation = request.getParameter("orderPickupLocation");
+		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+=======
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "DELETE from orders WHERE username = "+ username;
+//		String orderPickupLocation = request.getParameter("orderPickupLocation");
+//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+>>>>>>> Stashed changes
+>>>>>>> bottombar
 
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
