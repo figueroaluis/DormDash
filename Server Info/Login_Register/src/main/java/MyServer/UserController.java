@@ -262,9 +262,17 @@ public class UserController {
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
 
-			int id = rs.getInt("orderID");
 
-			String insertSql = "UPDATE users SET orderAccepted = " + id + "WHERE username = '" + username + "';";
+			System.out.println("here");
+			int id = 0;
+
+			if(rs.next()){
+				id = rs.getInt("orderID");
+			}
+
+			System.out.println(id);
+
+			String insertSql = "UPDATE users SET orderAccepted = " + id + " WHERE username = '" + username + "';";
 
 			//put on database
 
@@ -287,7 +295,7 @@ public class UserController {
 		//String insertTableSql = "Insert Into Orders."
 
 
-		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
 
 
 
