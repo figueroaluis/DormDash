@@ -2,12 +2,8 @@ package MyServer;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
-
 import javax.servlet.http.*;
-import javax.xml.transform.Result;
-
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.Random;
 
@@ -15,8 +11,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
-import javax.servlet.http.Cookie;
-import org.springframework.web.bind.annotation.CookieValue;
+
 
 
 
@@ -28,12 +23,8 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
-
 	static Connection conn = null;
 	static PreparedStatement ps = null;
-
-
-
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
@@ -100,7 +91,6 @@ public class UserController {
 	public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-		String loginStatus = request.getParameter("status");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String storedHashedKey;
 
@@ -110,11 +100,6 @@ public class UserController {
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
-//		responseHeaders.set("typ", "JWT");
-//		responseHeaders.set("alg", "HS256");
-
-
-
 
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -142,15 +127,11 @@ public class UserController {
 					storedHashedKey = rs.getString("password");
 					//Compare the stored hashed key with the input hashedKey generated from the password parameter to validate the login
 
-					//since user is logging in, create a JWT for user
-					//createJWT.create(password);
 
 					//We will sign our JWT with our ApiKey secret
 					Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-					String jws = Jwts.builder().setSubject(storedHashedKey).signWith(key).compact();
-					Cookie token = new Cookie("response", jws);
-					response.addCookie(token);
-					
+					String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(username).signWith(key).compact();
+					responseHeaders.set("Authorization", "Bearer: " + jws);
 
 					if (storedHashedKey.equals(hashedKey)) {
 						MyServer.users.put(username, password);
@@ -178,11 +159,6 @@ public class UserController {
 	@RequestMapping(value = "/order", method = RequestMethod.POST) // <-- setup the endpoint URL at /order with the HTTP POST method
 	public ResponseEntity<String> order(@RequestBody String body, HttpServletRequest request) {
 
-		//username varchar(40) not null,
-//	orderID int not null,
-//	foodOrder varchar(50),
-//	orderPickupLocation varchar(40),
-//	orderDropoffLocation varchar(40),
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 
@@ -190,8 +166,6 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "INSERT INTO orders(username,foodOrder) VALUES (?,?)";
-//		String orderPickupLocation = request.getParameter("orderPickupLocation");
-//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
 
 		try {
 
@@ -204,7 +178,6 @@ public class UserController {
 			ResultSet rs = ps.executeQuery();
 
 			//put on database
-
 			ps = conn.prepareStatement(insertSql);
 			ps.setString(1, username);
 			ps.setString(2, order);
@@ -226,31 +199,22 @@ public class UserController {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
-
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
 
-
 		try {
 
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
-
 			//put on database
-
 			ps = conn.prepareStatement(insertSql);
 			ps.executeUpdate();
-
-
-
-
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
 		} catch (SQLException se) {
@@ -260,10 +224,6 @@ public class UserController {
 			System.out.println("Oops there was an error");
 
 		}
-
-		//String insertTableSql = "Insert Into Orders."
-
-
 		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
 
 	}
@@ -277,38 +237,24 @@ public class UserController {
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
-		//String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
-
 
 		try {
-
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
-
-
 			System.out.println("here");
 			int id = 0;
-
 			if(rs.next()){
 				id = rs.getInt("orderID");
 			}
-
 			System.out.println(id);
-
 			String insertSql = "UPDATE users SET orderAccepted = " + id + " WHERE username = '" + username + "';";
-
 			//put on database
-
 			ps = conn.prepareStatement(insertSql);
 			ps.executeUpdate();
-
-
-
 
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
@@ -320,18 +266,12 @@ public class UserController {
 
 		}
 
-		//String insertTableSql = "Insert Into Orders."
-
-
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
 
 
 
 	}
-
-
-
-
+	
 	//Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {
 		StringBuilder builder = new StringBuilder();
