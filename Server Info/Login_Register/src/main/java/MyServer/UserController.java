@@ -28,17 +28,11 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
-<<<<<<< HEAD
-
 	static Connection conn = null;
 	static PreparedStatement ps = null;
-=======
-	static final String SAMPASSWORD = "Matosabe4";
 
-    static Connection conn = null;
-    static PreparedStatement ps = null;
 
->>>>>>> 5c84715954d3dd2eeb2e34b42d1c3945615aa961
+
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
