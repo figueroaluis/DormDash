@@ -137,6 +137,13 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println("ONSUCCESS");
                         String s = new String(responseBody);
                         System.out.println(s);
+
+
+                        AsyncHttpClient ahclient = new AsyncHttpClient();
+                        PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+
+                        ahclient.setCookieStore(cookieStore);
+
                     }
 
                     @Override

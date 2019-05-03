@@ -18,7 +18,6 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
-	static final String SAMPASSWORD = "Matosabe4";
 
     static Connection conn = null;
     static PreparedStatement ps = null;
@@ -168,7 +167,7 @@ public class UserController {
 		try {
 
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
@@ -208,7 +207,7 @@ public class UserController {
 		try {
 
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
@@ -255,7 +254,7 @@ public class UserController {
 		try {
 
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, SAMPASSWORD);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
