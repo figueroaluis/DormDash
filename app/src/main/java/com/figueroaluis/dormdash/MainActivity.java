@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new FragmentSearch();
                     } else if(position==2){
                         // open the sign up page
+                        selectedFragment = new FragmentOrder();
                     } else if(position==3){
                         // open the log/sign page
                         selectedFragment = new FragmentLogSign();

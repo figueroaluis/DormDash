@@ -28,9 +28,17 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
+<<<<<<< HEAD
 
 	static Connection conn = null;
 	static PreparedStatement ps = null;
+=======
+	static final String SAMPASSWORD = "Matosabe4";
+
+    static Connection conn = null;
+    static PreparedStatement ps = null;
+
+>>>>>>> 5c84715954d3dd2eeb2e34b42d1c3945615aa961
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
@@ -221,11 +229,6 @@ public class UserController {
 	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
 	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
 
-		//username varchar(40) not null,
-//	orderID int not null,
-//	foodOrder varchar(50),
-//	orderPickupLocation varchar(40),
-//	orderDropoffLocation varchar(40),
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 
@@ -233,8 +236,7 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
-//		String orderPickupLocation = request.getParameter("orderPickupLocation");
-//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
 
 		try {
 
@@ -253,13 +255,19 @@ public class UserController {
 
 
 
+
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
 		} catch (SQLException se) {
 			System.out.println("SQL Exception");
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+
 		}
 
 		//String insertTableSql = "Insert Into Orders."
+
 
 		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
 
@@ -268,20 +276,14 @@ public class UserController {
 	@RequestMapping(value = "/acceptorder", method = RequestMethod.POST)
 	public ResponseEntity<String> acceptorder(@RequestBody String body, HttpServletRequest request) {
 
-		//username varchar(40) not null,
-//	orderID int not null,
-//	foodOrder varchar(50),
-//	orderPickupLocation varchar(40),
-//	orderDropoffLocation varchar(40),
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-//		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
-//		String orderPickupLocation = request.getParameter("orderPickupLocation");
-//		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
+		//String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+
 
 		try {
 
@@ -293,10 +295,23 @@ public class UserController {
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
 
+
+			System.out.println("here");
+			int id = 0;
+
+			if(rs.next()){
+				id = rs.getInt("orderID");
+			}
+
+			System.out.println(id);
+
+			String insertSql = "UPDATE users SET orderAccepted = " + id + " WHERE username = '" + username + "';";
+
 			//put on database
 
-			//ps = conn.prepareStatement(insertSql);
+			ps = conn.prepareStatement(insertSql);
 			ps.executeUpdate();
+
 
 
 
@@ -304,11 +319,18 @@ public class UserController {
 			System.out.println("Class Not Found Exception");
 		} catch (SQLException se) {
 			System.out.println("SQL Exception");
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+
 		}
 
 		//String insertTableSql = "Insert Into Orders."
 
-		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
+
+
 
 	}
 
