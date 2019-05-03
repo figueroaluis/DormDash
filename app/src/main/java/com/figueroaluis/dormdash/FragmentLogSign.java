@@ -73,6 +73,9 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     // method to sign up
     public void onSignUpClicked(View view){
         AsyncHttpClient client = new AsyncHttpClient();
+        final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
+        client.setCookieStore(myCookieStore);
+
         // make sure that we have both a username and a password
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
             Toast.makeText(view.getContext(), "A username and a password are required.", Toast.LENGTH_SHORT).show();
@@ -87,33 +90,33 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
 //            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
-            client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
+                client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
                     @Override
-                public void onStart() {
-                    // called before request is started
-                    System.out.println("STARTED");
+                    public void onStart() {
+                        // called before request is started
+                        System.out.println("STARTED");
 
-                }
+                    }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    //Test out the response with this
-                    System.out.println("ONSUCCESS");
-                    String s = new String(responseBody);
-                    System.out.println(s);
-                }
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        //Test out the response with this
+                        System.out.println("ONSUCCESS");
+                        String s = new String(responseBody);
+                        System.out.println(s);
+                    }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                System.out.println("failure");
-                }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        System.out.println("failure");
+                    }
 
-                @Override
-                public void onRetry(int retryNo) {
-                    // called when request is retried
-                }
-            });
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                    }
+                });
 
 
             }else{
@@ -123,7 +126,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
                 client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
-//                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
+                    //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         // called before request is started
@@ -208,4 +211,3 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         return view;
     }
 }
-

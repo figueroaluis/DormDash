@@ -11,6 +11,16 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.Random;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import javax.servlet.http.Cookie;
+import org.springframework.web.bind.annotation.CookieValue;
+
+
+
+
 
 @RestController
 public class UserController {
@@ -19,8 +29,7 @@ public class UserController {
 	static final String USER = "root";
 	static final String PASSWORD = "";
 
-    static Connection conn = null;
-    static PreparedStatement ps = null;
+
 
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
@@ -29,8 +38,6 @@ public class UserController {
 		String password = request.getParameter("password");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
-
-
 
 		/*Creating http headers object to place into response entity the server will return.
 		This is what allows us to set the content-type to application/json or any other content-type
@@ -86,10 +93,11 @@ public class UserController {
 		//Returns the response with a String, headers, and HTTP status
 		return new ResponseEntity(hashedKey, responseHeaders, HttpStatus.OK);
 	}
-	@RequestMapping(value = "/login", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
-	public ResponseEntity<String> login(HttpServletRequest request) {
+	@RequestMapping(value = "/login", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
+	public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
+		String loginStatus = request.getParameter("status");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String storedHashedKey;
 
@@ -99,6 +107,11 @@ public class UserController {
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
+//		responseHeaders.set("typ", "JWT");
+//		responseHeaders.set("alg", "HS256");
+
+
+
 
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -122,9 +135,22 @@ public class UserController {
 			else {
 				//Retrieves the stored hashkey for the username logging in
 				try {
+
 					storedHashedKey = rs.getString("password");
 					//Compare the stored hashed key with the input hashedKey generated from the password parameter to validate the login
+
+					//since user is logging in, create a JWT for user
+					//createJWT.create(password);
+
+					//We will sign our JWT with our ApiKey secret
+					Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+					String jws = Jwts.builder().setSubject(storedHashedKey).signWith(key).compact();
+					Cookie token = new Cookie("response", jws);
+					response.addCookie(token);
+					
+
 					if (storedHashedKey.equals(hashedKey)) {
+						MyServer.users.put(username, password);
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
 					}
 
