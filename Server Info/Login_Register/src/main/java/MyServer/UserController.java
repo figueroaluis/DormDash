@@ -29,6 +29,9 @@ public class UserController {
 	static final String USER = "root";
 	static final String PASSWORD = "";
 
+	static Connection conn = null;
+	static PreparedStatement ps = null;
+
 
 
 
