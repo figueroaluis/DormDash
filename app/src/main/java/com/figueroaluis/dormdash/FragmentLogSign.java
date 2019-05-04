@@ -180,7 +180,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the layout
-        View view = inflater.inflate(R.layout.log_sign, container, false);
+      //  View view = inflater.inflate(R.layout.log_sign, container, false);
 
 //        // sign up button
 //        signUpButton = view.findViewById(R.id.signUp_button);
@@ -217,13 +217,20 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         mSharedPreferences = this.getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 
         if(mSharedPreferences.contains(PREF_SKIP_LOGIN)) {
+
+            System.out.println("Recognized User");
+
             View v = inflater.inflate(R.layout.fragment_accept_orders, container, false);
 
-            acceptButton = (Button) view.findViewById(R.id.button_accept);
+            acceptButton = (Button) v.findViewById(R.id.button_accept);
             acceptButton.setOnClickListener(this);
+
+            return v;
         }
 
         else {
+
+            View view = inflater.inflate(R.layout.log_sign, container, false);
 
             // get access to the edit texts in the log in page
             usernameEditText = view.findViewById(R.id.username_editText);
@@ -300,11 +307,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
 
-
+            return view;
 
         }
 
-        return view;
+      //  return view;
     }
 
     private boolean validUserData() {

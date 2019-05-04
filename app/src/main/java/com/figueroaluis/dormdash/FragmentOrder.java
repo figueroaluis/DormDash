@@ -23,6 +23,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
     Button placeButton;
     EditText orderText;
+    EditText pickUpLocationText;
 
 
     @Override
@@ -30,6 +31,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         if(view.getId() == R.id.button_placeButton){
 
             orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
+            pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
 
             AsyncHttpClient client = new AsyncHttpClient();
             final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
@@ -38,7 +40,8 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
             params.put("foodOrder", orderText.getText().toString());
-            //put drop off and pickup location
+            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
+            //put drop off location
 
             client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
 
