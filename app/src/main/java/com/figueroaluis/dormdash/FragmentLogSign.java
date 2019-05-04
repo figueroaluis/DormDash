@@ -86,9 +86,9 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             RequestParams params = new RequestParams();
             params.put("username", usernameEditText.getText().toString());
             params.put("password", passwordEditText.getText().toString());
+
+            //SIGNUP MODE
             if(signUpMode){
-
-
 //            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
                 client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
@@ -105,6 +105,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println("ONSUCCESS");
                         String s = new String(responseBody);
                         System.out.println(s);
+
+
                     }
 
                     @Override
@@ -120,12 +122,13 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
             }else{
+                //LOG IN
                 // this means that they are in Log in mode, so we should log them in
                 System.out.println("MADE IT LOGIN");
 
 
 
-                client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
+                client.post("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
                     //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onStart() {
@@ -139,12 +142,20 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         //Test out the response with this
                         System.out.println("ONSUCCESS");
                         String s = new String(responseBody);
+                        String token = headers[0].getValue().substring(7);
                         System.out.println(s);
+                        System.out.println(token);
+                        if (token.startsWith("Bearer ")){
 
+                            System.out.println(token);
+                        } else {
+                            //Error
+                            System.out.println("fin");
+
+                        }
 
                         AsyncHttpClient ahclient = new AsyncHttpClient();
                         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-
                         ahclient.setCookieStore(cookieStore);
 
                     }
@@ -159,8 +170,6 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         // called when request is retried
                     }
                 });
-
-
             }
         }
     }

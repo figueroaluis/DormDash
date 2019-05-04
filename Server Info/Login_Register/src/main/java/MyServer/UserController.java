@@ -5,17 +5,11 @@ import org.springframework.http.*;
 import javax.servlet.http.*;
 import java.security.MessageDigest;
 import java.sql.*;
-import java.util.Random;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
-
-
-
-
-
 
 @RestController
 public class UserController {
@@ -88,12 +82,11 @@ public class UserController {
 		return new ResponseEntity(hashedKey, responseHeaders, HttpStatus.OK);
 	}
 	@RequestMapping(value = "/login", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
-	public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<String> login(HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String storedHashedKey;
-
 
 		/*Creating http headers object to place into response entity the server will return.
 		This is what allows us to set the content-type to application/json or any other content-type
@@ -121,20 +114,18 @@ public class UserController {
 				return new ResponseEntity("{\"message\":\"username not registered\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 			}
 			else {
-				//Retrieves the stored hashkey for the username logging in
 				try {
-
 					storedHashedKey = rs.getString("password");
 					//Compare the stored hashed key with the input hashedKey generated from the password parameter to validate the login
 
-
-					//We will sign our JWT with our ApiKey secret
-					Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-					String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(username).signWith(key).compact();
-					responseHeaders.set("Authorization", "Bearer: " + jws);
-
 					if (storedHashedKey.equals(hashedKey)) {
-						MyServer.users.put(username, password);
+
+						//We will sign our JWT with our ApiKey secret
+						Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
+						responseHeaders.set("Authorization", "Bearer " + jws);
+						MyServer.users.put(username, jws);
+
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
 					}
 
@@ -166,6 +157,8 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "INSERT INTO orders(username,foodOrder) VALUES (?,?)";
+
+		
 
 		try {
 
@@ -271,7 +264,7 @@ public class UserController {
 
 
 	}
-	
+
 	//Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {
 		StringBuilder builder = new StringBuilder();
