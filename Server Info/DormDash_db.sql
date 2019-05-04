@@ -49,6 +49,12 @@ INSERT INTO locations VALUES ("Berkus Hall", 3.00),
 ("Chilcott Hall", 1.00),
 ("Haines Hall", 1.00);
 
+INSERT INTO locations VALUES ("Marketplace", 1.00),
+("Tiger Cooler", 1.00),
+("Green Bean", 1.00),
+("Coffee Cart", 2.00);
+
+
 
 
 

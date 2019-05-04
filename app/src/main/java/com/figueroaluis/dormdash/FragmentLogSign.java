@@ -41,6 +41,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     EditText usernameEditText;
     EditText passwordEditText;
     AppCompatButton signUpButton;
+    AppCompatButton logInButton;
 
     Button acceptButton;
 
@@ -57,29 +58,17 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     @Override
     public void onClick(View view){
         // check that it's the proper view
-        if(view.getId() == R.id.logIn_textView){
+        if(view.getId() == R.id.logIn_button){
             // log for us to keep track of it
             System.out.println(view.getId());
-            System.out.println(R.id.logIn_textView);
-            Log.i("Switch", "Was tapped");
+            System.out.println("Log In button clicked");
 
-            signUpButton = getView().findViewById(R.id.signUp_button);
-
-
-            if(signUpMode){
-                // if they are in sign up mode, then we should switch to the other view
-                signUpMode = false;
-                signUpButton.setText("Log In");
-                loginTextView.setText("or, Sign Up");
-            }else{
-                // if they are not in sign up mode, then we should switch to the other view
-                signUpMode = true;
-                signUpButton.setText("Sign Up");
-                loginTextView.setText("or, Log In");
-            }
         } else if(view.getId() == R.id.dormdash_logo || view.getId() == R.id.logSign_backgroundLayout){
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+        } else if(view.getId() == R.id.signUp_button) {
+            System.out.println(view.getId());
+            System.out.println("Sign Up button clicked");
         }
     }
 
@@ -160,9 +149,6 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println(token);
 
 
-                        AsyncHttpClient ahclient = new AsyncHttpClient();
-                        PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-                        ahclient.setCookieStore(cookieStore);
 
                     }
 
@@ -239,10 +225,6 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
         else {
 
-            // access the textview of log in
-            loginTextView = view.findViewById(R.id.logIn_textView);
-            loginTextView.setOnClickListener(this);
-
             // get access to the edit texts in the log in page
             usernameEditText = view.findViewById(R.id.username_editText);
             passwordEditText = view.findViewById(R.id.password_editText);
@@ -259,13 +241,12 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             //sign up button
             signUpButton = view.findViewById(R.id.signUp_button);
+            logInButton = view.findViewById(R.id.logIn_button);
 
-            if(signUpMode) {
 
-                Toast.makeText(getActivity().getApplicationContext(), "Sign up Button showing", Toast.LENGTH_SHORT).show();
 
-                // sign up button
-                signUpButton.setOnClickListener(new View.OnClickListener() {
+            // sign up button
+            logInButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //onSignUpClicked(view);
@@ -295,15 +276,12 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     }
                 });
 
-            } else {
-
                 signUpButton.setOnClickListener(new View.OnClickListener()
 
                 {
                         @Override
                         public void onClick (View view) {
 
-                            Toast.makeText(getActivity().getApplicationContext(), "Log in Button showing", Toast.LENGTH_SHORT).show();
 
                             if(validUserData()) {
 
@@ -312,7 +290,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                                 mEditor.putString(PREF_NAME, Name);
                                 mEditor.putString(PREF_PASSWD, Password);
-                                mEditor.commit();
+                                mEditor.commit(); //sign up the user's information in the shared preferences
 
 
                             }
@@ -320,7 +298,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 }
             });
 
-            }
+
 
 
 
