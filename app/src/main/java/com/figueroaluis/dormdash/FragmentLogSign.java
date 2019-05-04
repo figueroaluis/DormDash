@@ -155,17 +155,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         //Test out the response with this
                         System.out.println("ONSUCCESS log in");
                         String s = new String(responseBody);
-                        String token = headers[0].getValue().substring(7);
+                        String token = headers[0].getValue();
                         System.out.println(s);
                         System.out.println(token);
-                        if (token.startsWith("Bearer ")){
 
-                            System.out.println(token);
-                        } else {
-                            //Error
-                            System.out.println("fin");
-
-                        }
 
                         AsyncHttpClient ahclient = new AsyncHttpClient();
                         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());

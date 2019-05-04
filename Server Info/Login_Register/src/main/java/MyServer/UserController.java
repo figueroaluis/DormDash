@@ -1,7 +1,11 @@
 package MyServer;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.security.MessageDigest;
 import java.sql.*;
@@ -17,6 +21,7 @@ public class UserController {
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
 	static final String PASSWORD = "";
+	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	static Connection conn = null;
 	static PreparedStatement ps = null;
 
@@ -121,17 +126,13 @@ public class UserController {
 					if (storedHashedKey.equals(hashedKey)) {
 
 						//We will sign our JWT with our ApiKey secret
-						Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
-						responseHeaders.set("Authorization", "Bearer " + jws);
+						responseHeaders.set("Authorization", jws);
 						MyServer.users.put(username, jws);
-
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
 					}
-
 				}
 				catch(SQLException se) {}
-
 
 			}
 		}
@@ -152,16 +153,29 @@ public class UserController {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
+		System.out.println("made it to here");
 
-		String username = request.getParameter("username");
-		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "INSERT INTO orders(username,foodOrder) VALUES (?,?)";
-
-		
+		//section to verify authorization. If it fails jump to the catch clause
 
 		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
+			System.out.println(claims.getSubject());
+			System.out.println("lol");
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"You are not logged in.\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+
+		String username = request.getParameter("username");
+		String foodOrder = request.getParameter("foodOrder");
+		String orderPickupLocation = request.getParameter("orderPickupLocation");
+		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
+				"VALUES (?, ?, ?, ?)";
+
+		//section for SQL stuff
+		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
@@ -173,16 +187,16 @@ public class UserController {
 			//put on database
 			ps = conn.prepareStatement(insertSql);
 			ps.setString(1, username);
-			ps.setString(2, order);
+			ps.setString(2, foodOrder);
+			ps.setString(3, orderPickupLocation);
+			ps.setString(4, orderDropoffLocation);
 			ps.executeUpdate();
-
-
 
 		} catch(Exception e) {
 			System.out.println("Oops there was an error");
+			e.printStackTrace();
+			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-
-		//String insertTableSql = "Insert Into Orders."
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
 
@@ -196,6 +210,16 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			System.out.println(claims.getSubject());
+			System.out.println("lol");
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"You are not logged in. GET THE FUCK OUT\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+
 
 		try {
 
