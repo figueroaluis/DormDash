@@ -15,7 +15,6 @@
 
         <activity android:name=".SearchScreen"/>
         <activity android:name=".OrderScreen"/>
-        <activity android:name=".FragmentLogSign"/>
         <activity android:name=".DetailedMarketplace"/>
         <activity android:name=".MainActivity">
             <intent-filter>

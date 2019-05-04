@@ -37,6 +37,15 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     EditText passwordEditText;
     AppCompatButton signUpButton;
 
+    // go to profile page
+    public void showProfilePage(){
+        FragmentProfile fragmentProfile = new FragmentProfile();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragmentProfile, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
 
     // implement a function that allows the button to open another view
     @Override
@@ -111,11 +120,12 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 }
             });
             */
+            showProfilePage();
 
             }else{
                 // this means that they are in Log in mode, so we should log them in
                 System.out.println("MADE IT LOGIN");
-
+                showProfilePage();
 
                 /*
                 client.get("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
@@ -193,6 +203,19 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         // if we click on enter on the keyboard and then disappear the keyboard
         // it allows us to log in
         passwordEditText.setOnKeyListener(FragmentLogSign.this);
+
+
+        // check if someone is already logged in
+        // put the logic here
+        /*
+
+        instead of making a call, keep it in the shared preferences and check whether the token has expired or not
+
+        if (user is logged on){
+            showProfilePage();
+        }
+         */
+
 
         return view;
     }
