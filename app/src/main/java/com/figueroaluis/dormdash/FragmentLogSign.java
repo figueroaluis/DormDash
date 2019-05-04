@@ -1,6 +1,8 @@
 package com.figueroaluis.dormdash;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +41,16 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     EditText usernameEditText;
     EditText passwordEditText;
     AppCompatButton signUpButton;
+
+    Button acceptButton;
+
+    private SharedPreferences mSharedPreferences;
+    private String Name,Password;
+
+    public static final String PREFERENCE = "preference";
+    public static final String PREF_NAME = "name";
+    public static final String PREF_PASSWD = "passwd";
+    public static final String PREF_SKIP_LOGIN = "skip_login";
 
 
     // implement a function that allows the button to open another view
@@ -95,14 +108,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     @Override
                     public void onStart() {
                         // called before request is started
-                        System.out.println("STARTED");
+                        System.out.println("STARTED sign up button");
 
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         //Test out the response with this
-                        System.out.println("ONSUCCESS");
+                        System.out.println("ONSUCCESS sign up");
                         String s = new String(responseBody);
                         System.out.println(s);
 
@@ -111,7 +124,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        System.out.println("failure");
+                        System.out.println("failure sign up");
                     }
 
                     @Override
@@ -133,14 +146,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     @Override
                     public void onStart() {
                         // called before request is started
-                        System.out.println("STARTED");
+                        System.out.println("STARTED Log in button");
 
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         //Test out the response with this
-                        System.out.println("ONSUCCESS");
+                        System.out.println("ONSUCCESS log in");
                         String s = new String(responseBody);
                         String token = headers[0].getValue().substring(7);
                         System.out.println(s);
@@ -162,7 +175,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        System.out.println("failure");
+                        System.out.println("failure log in");
                     }
 
                     @Override
@@ -190,33 +203,147 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         // inflate the layout
         View view = inflater.inflate(R.layout.log_sign, container, false);
 
-        // sign up button
-        signUpButton = view.findViewById(R.id.signUp_button);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onSignUpClicked(view);
+//        // sign up button
+//        signUpButton = view.findViewById(R.id.signUp_button);
+//        signUpButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onSignUpClicked(view);
+//            }
+//        });
+//
+//        // access the textview of log in
+//        loginTextView = view.findViewById(R.id.logIn_textView);
+//        loginTextView.setOnClickListener(this);
+//
+//        // get access to the edit texts in the log in page
+//        usernameEditText = view.findViewById(R.id.username_editText);
+//        passwordEditText = view.findViewById(R.id.password_editText);
+//        ImageView logoImageView = view.findViewById(R.id.dormdash_logo);
+//        ConstraintLayout backgroundLayout = view.findViewById(R.id.logSign_backgroundLayout);
+//
+//        // getting rid of the keyboard, clicking elsewhere
+//        logoImageView.setOnClickListener(FragmentLogSign.this);
+//        backgroundLayout.setOnClickListener(FragmentLogSign.this);
+//
+//        // if we click on enter on the keyboard and then disappear the keyboard
+//        // it allows us to log in
+//        passwordEditText.setOnKeyListener(FragmentLogSign.this);
+
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+
+        //implementing shared preferences
+
+        mSharedPreferences = this.getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+
+        if(mSharedPreferences.contains(PREF_SKIP_LOGIN)) {
+            View v = inflater.inflate(R.layout.fragment_accept_orders, container, false);
+
+            acceptButton = (Button) view.findViewById(R.id.button_accept);
+            acceptButton.setOnClickListener(this);
+        }
+
+        else {
+
+            // access the textview of log in
+            loginTextView = view.findViewById(R.id.logIn_textView);
+            loginTextView.setOnClickListener(this);
+
+            // get access to the edit texts in the log in page
+            usernameEditText = view.findViewById(R.id.username_editText);
+            passwordEditText = view.findViewById(R.id.password_editText);
+            ImageView logoImageView = view.findViewById(R.id.dormdash_logo);
+            ConstraintLayout backgroundLayout = view.findViewById(R.id.logSign_backgroundLayout);
+
+            // getting rid of the keyboard, clicking elsewhere
+            logoImageView.setOnClickListener(FragmentLogSign.this);
+            backgroundLayout.setOnClickListener(FragmentLogSign.this);
+
+            // if we click on enter on the keyboard and then disappear the keyboard
+            // it allows us to log in
+            passwordEditText.setOnKeyListener(FragmentLogSign.this);
+
+            //sign up button
+            signUpButton = view.findViewById(R.id.signUp_button);
+
+            if(signUpMode) {
+
+                Toast.makeText(getActivity().getApplicationContext(), "Sign up Button showing", Toast.LENGTH_SHORT).show();
+
+                // sign up button
+                signUpButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //onSignUpClicked(view);
+
+                        if(validUserData()) {
+
+                            if(mSharedPreferences.contains(PREF_NAME) && mSharedPreferences.contains(PREF_PASSWD)) {
+                                SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+
+                                mEditor.putString(PREF_SKIP_LOGIN, "skip");
+                                mEditor.commit();
+
+                                //example code starts the intent of the login activity over, unsure what the fragment equivalent is
+
+                            } else {
+
+                                Toast.makeText(getActivity().getApplicationContext(), "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+
+                            Toast.makeText(getActivity().getApplicationContext(), "Missing fields", Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+                    }
+                });
+
+            } else {
+
+                signUpButton.setOnClickListener(new View.OnClickListener()
+
+                {
+                        @Override
+                        public void onClick (View view) {
+
+                            Toast.makeText(getActivity().getApplicationContext(), "Log in Button showing", Toast.LENGTH_SHORT).show();
+
+                            if(validUserData()) {
+
+                                mSharedPreferences = getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+
+                                mEditor.putString(PREF_NAME, Name);
+                                mEditor.putString(PREF_PASSWD, Password);
+                                mEditor.commit();
+
+
+                            }
+
+                }
+            });
+
             }
-        });
 
-        // access the textview of log in
-        loginTextView = view.findViewById(R.id.logIn_textView);
-        loginTextView.setOnClickListener(this);
 
-        // get access to the edit texts in the log in page
-        usernameEditText = view.findViewById(R.id.username_editText);
-        passwordEditText = view.findViewById(R.id.password_editText);
-        ImageView logoImageView = view.findViewById(R.id.dormdash_logo);
-        ConstraintLayout backgroundLayout = view.findViewById(R.id.logSign_backgroundLayout);
 
-        // getting rid of the keyboard, clicking elsewhere
-        logoImageView.setOnClickListener(FragmentLogSign.this);
-        backgroundLayout.setOnClickListener(FragmentLogSign.this);
-
-        // if we click on enter on the keyboard and then disappear the keyboard
-        // it allows us to log in
-        passwordEditText.setOnKeyListener(FragmentLogSign.this);
+        }
 
         return view;
     }
+
+    private boolean validUserData() {
+
+        Name = usernameEditText.getText().toString().trim();
+        Password = passwordEditText.getText().toString().trim();
+
+        return !(Name.isEmpty() || Password.isEmpty());
+
+    }
+
+
 }
