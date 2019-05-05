@@ -17,16 +17,63 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
     Button greenbeanButton;
     Button coffeecartButton;
 
+    //show detailed marketplace menu
+
+    public void showMarketplaceMenu() {
+
+        FragmentDetailedMarketplace fdm = new FragmentDetailedMarketplace();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fdm, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    public void showCoolerMenu() {
+
+        FragmentDetailedCooler fdc = new FragmentDetailedCooler();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fdc, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    public void showCoffeeCartMenu() {
+
+        FragmentDetailedCoffeeCart fdcc = new FragmentDetailedCoffeeCart();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fdcc, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    public void showGreenBeanMenu() {
+
+        FragmentDetailedGreenBean fdgb = new FragmentDetailedGreenBean();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fdgb, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.marketplace_button){
-            Toast.makeText(view.getContext(), "Marketplace button was pressed.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), "Marketplace button was pressed.", Toast.LENGTH_SHORT).show();
+            showMarketplaceMenu();
         }else if(view.getId() == R.id.cooler_button){
-            Toast.makeText(view.getContext(), "Cooler button was pressed.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), "Cooler button was pressed.", Toast.LENGTH_SHORT).show();
+            showCoolerMenu();
         }else if(view.getId() == R.id.greenbean_button){
-            Toast.makeText(view.getContext(), "Green bean button was pressed.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), "Green bean button was pressed.", Toast.LENGTH_SHORT).show();
+            showGreenBeanMenu();
         } else if(view.getId() == R.id.coffeecart_button){
-            Toast.makeText(view.getContext(), "Coffee cart button was pressed.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), "Coffee cart button was pressed.", Toast.LENGTH_SHORT).show();
+            showCoffeeCartMenu();
         }
     }
 

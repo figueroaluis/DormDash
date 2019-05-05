@@ -30,15 +30,17 @@ public class SearchScreen extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    ImageButton homeButton;
+    ImageButton searchButton;
+    ImageButton orderButton;
+    ImageButton profileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_screen);
 
-        ImageButton homeButton;
-        ImageButton searchButton;
-        //ImageButton orderButton;
-        ImageButton profileButton;
+
 
         profileButton = (ImageButton) findViewById(R.id.imageButton_profile);
         profileButton.setOnClickListener(SearchScreen.this);
@@ -48,6 +50,9 @@ public class SearchScreen extends AppCompatActivity implements View.OnClickListe
 
         searchButton = (ImageButton) findViewById(R.id.imageButton_search);
         searchButton.setOnClickListener(SearchScreen.this);
+
+        orderButton = (ImageButton) findViewById(R.id.imageButton_orders);
+        orderButton.setOnClickListener(SearchScreen.this);
 
     }
 }
