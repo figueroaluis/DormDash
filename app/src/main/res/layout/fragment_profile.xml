@@ -191,6 +191,17 @@
                 android:textColor="@color/orangeProto"
                 android:textSize="18sp" />
 
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="-75dp"
+                android:layout_marginEnd="21dp"
+                android:layout_toEndOf="@+id/profile_option_text"
+                android:text="Logout"
+                android:textSize="7sp" />
+
         </RelativeLayout>
     </RelativeLayout>
 
