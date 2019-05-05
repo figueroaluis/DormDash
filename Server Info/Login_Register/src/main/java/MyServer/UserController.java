@@ -128,7 +128,7 @@ public class UserController {
 						//We will sign our JWT with our ApiKey secret
 						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
 						responseHeaders.set("Authorization", jws);
-						MyServer.users.put(username, jws);
+//						MyServer.users.put(username, jws);
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
 					}
 				}
@@ -157,13 +157,17 @@ public class UserController {
 
 		//section to verify authorization. If it fails jump to the catch clause
 
+
+		String token;
 		try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
 			System.out.println(claims.getSubject());
-			System.out.println("lol");
 		} catch (final SignatureException e) {
-			return new ResponseEntity("{\"message\":\"You are not logged in.\"}", responseHeaders, HttpStatus.FORBIDDEN);
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
 
 		String username = request.getParameter("username");
@@ -174,7 +178,13 @@ public class UserController {
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
 
-		//section for SQL stuff
+		//section for ordercheck and hashmap placement
+		if (!MyServer.CustomerOrder.containsKey(username)){
+			MyServer.CustomerOrder.put(username, foodOrder);
+		}
+
+
+		//section for SQL stuff that will save in case of server failuer
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
@@ -198,6 +208,46 @@ public class UserController {
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 
+
+		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/recievedorder", method = RequestMethod.POST) // <-- setup the endpoint URL at /order with the HTTP POST method
+	public ResponseEntity<String> recievedorder(@RequestBody String body, HttpServletRequest request) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+		System.out.println("made it to here");
+
+		//section to verify authorization. If it fails jump to the catch clause
+
+
+		String token;
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+
+		String username = request.getParameter("username");
+		String foodOrder = request.getParameter("foodOrder");
+		String orderPickupLocation = request.getParameter("orderPickupLocation");
+		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+
+
+		//section for ordercheck and hashmap placement
+		if (!MyServer.CustomerOrder.containsKey(username)){
+			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+	
+		MyServer.CustomerOrder.remove(username, foodOrder);
+
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
 
 	}
@@ -210,14 +260,17 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+		String token;
 
 		try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
 			System.out.println(claims.getSubject());
-			System.out.println("lol");
 		} catch (final SignatureException e) {
-			return new ResponseEntity("{\"message\":\"You are not logged in. GET THE FUCK OUT\"}", responseHeaders, HttpStatus.FORBIDDEN);
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
 
 
@@ -255,6 +308,19 @@ public class UserController {
 		String order = request.getParameter("foodOrder");
 		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
 
+
+		String token;
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
@@ -284,6 +350,56 @@ public class UserController {
 		}
 
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
+
+
+
+	}
+
+	@RequestMapping(value = "/worktime", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
+	public ResponseEntity<String> worktime(HttpServletRequest request) {
+		String workStatus = request.getParameter("working");
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+		String username = request.getParameter("username");
+
+		String updateSql = "UPDATE Users\n" +
+				"SET is_working = '?'" + "WHERE username = '" + username + "';";
+
+
+		String token;
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+			//put on database
+			ps = conn.prepareStatement(updateSql);
+			ps.setString(1, workStatus);
+
+			ps.executeUpdate();
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+			e.printStackTrace();
+			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+		if (workStatus.equals("0")){
+			return new ResponseEntity("{\"message\":\"You are not working anymore.\"}", responseHeaders, HttpStatus.OK);}
+
+
+
+		return new ResponseEntity("{\"message\":\"You are working now.\"}", responseHeaders, HttpStatus.OK);
+
 
 
 
