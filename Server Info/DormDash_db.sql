@@ -7,9 +7,9 @@ create table users (
 	facebookID int,
 	venmoID int,
 	phoneNumber varchar(15),
-	is_registered_worker boolean,
+	is_registered_worker boolean, 
 	is_working boolean default false,
-	orderAccepted varchar(100),
+	orderAccepted int,
 	primary key(username));
 
 create table menu (
