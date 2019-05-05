@@ -15,14 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //things for loopj/asynch http requests
 import com.loopj.android.http.*;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
@@ -53,6 +59,13 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     public static final String PREF_NAME = "name";
     public static final String PREF_PASSWD = "passwd";
     public static final String PREF_SKIP_LOGIN = "skip_login";
+
+    private ListView mListView;
+    private Context mContext;
+    private FragmentProfileAdapter adapter;
+    private ArrayList<String> optionItemNames;
+    private ArrayList<ProfileOptionItem> optionItemList;
+    private ImageView userImage;
 
     // go to profile page
     public void showProfilePage(){
@@ -247,21 +260,48 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             System.out.println("Recognized User");
 
-            View v = inflater.inflate(R.layout.fragment_accept_orders, container, false);
+            View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-            acceptButton = (Button) v.findViewById(R.id.button_accept);
-            acceptButton.setOnClickListener(this);
+            optionItemNames = new ArrayList<>();
+            optionItemList = new ArrayList<>();
+            optionItemNames.add("Payment");
+            optionItemNames.add("Help");
+            optionItemNames.add("Settings");
+            optionItemNames.add("About");
+            optionItemNames.add("Log Out");
 
-            logoutButton = (Button) v.findViewById(R.id.button_logout);
-            logoutButton.setOnClickListener(new View.OnClickListener() {
+            for(int i = 0; i < optionItemNames.size(); i++){
+                optionItemList.add(new ProfileOptionItem(optionItemNames.get(i)));
+            }
+
+            adapter = new FragmentProfileAdapter(getContext(), optionItemList);
+            mListView = v.findViewById(R.id.option_items_listview);
+            mListView.setAdapter(adapter);
+
+            userImage = v.findViewById(R.id.profile_user_imageview);
+            Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
+
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    ProfileOptionItem selectedOption = optionItemList.get(position);
 
-                    System.out.println("User clicked log out button");
+                    if(selectedOption.text.equals("Log Out")){
+                        // delete the shared preferences
+                        // open up the new fragment that replaces the profile screen
 
-                    mEditor.clear();
-                    mEditor.commit();
+                        mEditor.clear();
+                        mEditor.commit();
 
+                        //Toast.makeText(getActivity().getApplicationContext(),"Log out is clicked",Toast.LENGTH_SHORT).show();
+
+                        FragmentLogSign fragls = new FragmentLogSign();
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragls, "Find this fragment")
+                                .addToBackStack(null).commit();
+
+
+                    }
                 }
             });
 
@@ -307,7 +347,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                                 mEditor.putString(PREF_SKIP_LOGIN, "skip");
                                 mEditor.commit();
 
-                                //example code starts the intent of the login activity over, unsure what the fragment equivalent is
+                                FragmentHome fragh = new FragmentHome();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, fragh, "Find this fragment")
+                                        .addToBackStack(null).commit();
 
                             } else {
 
@@ -345,6 +388,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                                 mEditor.putString(PREF_NAME, Name);
                                 mEditor.putString(PREF_PASSWD, Password);
                                 mEditor.commit(); //sign up the user's information in the shared preferences
+
+                                Toast.makeText(getActivity().getApplicationContext(),"Sign up confirmed...Please log in", Toast.LENGTH_SHORT).show();
 
 
                             }

@@ -1,6 +1,7 @@
 package com.figueroaluis.dormdash;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +41,7 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
         optionItemNames.add("Help");
         optionItemNames.add("Settings");
         optionItemNames.add("About");
+        optionItemNames.add("Log Out");
 
         for(int i = 0; i < optionItemNames.size(); i++){
             optionItemList.add(new ProfileOptionItem(optionItemNames.get(i)));
@@ -50,6 +54,19 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
         userImage = view.findViewById(R.id.profile_user_imageview);
         Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                ProfileOptionItem selectedOption = optionItemList.get(position);
+
+                if(selectedOption.text.equals("Log Out")){
+                    // delete the shared preferences
+                    // open up the new fragment that replaces the profile screen
+                    Toast.makeText(getActivity().getApplicationContext(),"Log out is clicked",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
 
 
         return view;
