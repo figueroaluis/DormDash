@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
+
+        <ImageView
+            android:id="@+id/profile_user_imageview"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="26dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/profile_username_textview"
+            android:layout_width="180dp"
+            android:layout_height="44dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="186dp"
+            android:layout_marginTop="34dp"
+            android:layout_toRightOf="@+id/profile_user_imageview"
+            android:text="User name"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/profile_usertype_textview"
+            android:layout_width="179dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="81dp"
+            android:layout_marginEnd="47dp"
+            android:text="Customer Type" />
+
+    </RelativeLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:layout_marginTop="105dp"-->
+            <!--app:srcCompat="@android:drawable/ic_menu_info_details" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/profile_help_textview"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_marginLeft="42dp"-->
+            <!--android:layout_marginTop="91dp"-->
+            <!--android:layout_toRightOf="@+id/profile_settings_imageview"-->
+            <!--android:text="Settings"-->
+            <!--android:textSize="21sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/profile_help_textview4"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_marginLeft="41dp"-->
+            <!--android:layout_marginTop="-42dp"-->
+            <!--android:layout_toRightOf="@+id/profile_settings_imageview"-->
+            <!--android:text="Settings"-->
+            <!--android:textSize="21sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/profile_help_textview3"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_marginLeft="42dp"-->
+            <!--android:layout_marginTop="46dp"-->
+            <!--android:layout_toRightOf="@+id/profile_settings_imageview"-->
+            <!--android:text="Settings"-->
+            <!--android:textSize="21sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/profile_help_textview2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_marginLeft="43dp"-->
+            <!--android:layout_marginTop="1dp"-->
+            <!--android:layout_toRightOf="@+id/profile_infoicon_imageview"-->
+            <!--android:text="Help"-->
+            <!--android:textSize="21sp" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_settings_imageview"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:layout_marginTop="148dp"-->
+            <!--app:srcCompat="@android:drawable/ic_menu_manage" />-->
+
+
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_settings_imageview2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginStart="31dp"-->
+            <!--android:layout_marginTop="194dp"-->
+            <!--app:srcCompat="@android:drawable/ic_menu_manage" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_settings_imageview3"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:layout_marginTop="61dp"-->
+            <!--app:srcCompat="@android:drawable/ic_menu_manage" />-->
+
+        <!--<Switch-->
+            <!--android:id="@+id/profile_switch"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignEnd="@+id/profile_infoicon_imageview"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginTop="22dp"-->
+            <!--android:layout_marginEnd="-5dp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/profile_switch_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignBottom="@+id/profile_switch"-->
+            <!--android:layout_marginLeft="42dp"-->
+            <!--android:layout_marginBottom="-1dp"-->
+            <!--android:layout_toRightOf="@+id/profile_switch"-->
+            <!--android:text="Client/Worker"-->
+            <!--android:textSize="20sp" />-->
+        <!---->
+        <!---->
+    <!--</RelativeLayout>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/profile_option_icon"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="6dp"
+            android:theme="@style/AppTheme"
+            app:srcCompat="@mipmap/ic_launcher_round" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/profile_option_icon">
+
+            <TextView
+                android:id="@+id/profile_option_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Client/Worker"
+                android:textColor="@color/orangeProto"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="-75dp"
+                android:layout_marginEnd="21dp"
+                android:layout_toEndOf="@+id/profile_option_text"
+                android:text="Logout"
+                android:textSize="7sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/option_items_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+
+</LinearLayout>

@@ -54,6 +54,15 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     public static final String PREF_PASSWD = "passwd";
     public static final String PREF_SKIP_LOGIN = "skip_login";
 
+    // go to profile page
+    public void showProfilePage(){
+        FragmentProfile fragmentProfile = new FragmentProfile();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragmentProfile, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
 
     // implement a function that allows the button to open another view
     @Override
@@ -66,7 +75,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
         } else if(view.getId() == R.id.dormdash_logo || view.getId() == R.id.logSign_backgroundLayout){
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
         } else if(view.getId() == R.id.signUp_button) {
             System.out.println(view.getId());
             System.out.println("Sign Up button clicked");
@@ -115,6 +128,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println("ONSUCCESS sign up");
                         String s = new String(responseBody);
                         System.out.println(s);
+
 
 
                     }
@@ -191,7 +205,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the layout
       //  View view = inflater.inflate(R.layout.log_sign, container, false);
 
@@ -244,10 +258,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 @Override
                 public void onClick(View view) {
 
-                    System.out.println("User clicked log out button");
-
                     mEditor.clear();
                     mEditor.commit();
+
+                    Toast.makeText(getActivity().getApplicationContext(), "You have been logged out", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -257,7 +271,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
         else {
 
-            View view = inflater.inflate(R.layout.log_sign, container, false);
+            final View view = inflater.inflate(R.layout.log_sign, container, false);
 
             // get access to the edit texts in the log in page
             usernameEditText = view.findViewById(R.id.username_editText);
@@ -294,7 +308,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                                 mEditor.putString(PREF_SKIP_LOGIN, "skip");
                                 mEditor.commit();
 
-                                //example code starts the intent of the login activity over, unsure what the fragment equivalent is
+                                //return the home view here somehow because the user is logged in
 
                             } else {
 
@@ -306,11 +320,6 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                             Toast.makeText(getActivity().getApplicationContext(), "Missing fields", Toast.LENGTH_SHORT).show();
 
                         }
-
-                        System.out.println("BEFORE");
-                        onSignUpClicked(view);
-                        System.out.println("AFTER");
-
 
                     }
                 });
@@ -337,7 +346,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                             }
 
 
+
                             onSignUpClicked(view);
+
+                            Toast.makeText(getActivity().getApplicationContext(), "Sign Up Successful...Please Log in now", Toast.LENGTH_LONG).show();
 
 
                 }

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.addItem(searchButton_navBar);
         bottomNavigation.addItem(ordersButton_navBar);
         bottomNavigation.addItem(profile_navBar);
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
         bottomNavigation.setAccentColor(Color.parseColor("#F5681E"));
         bottomNavigation.setForceTint(true);
         bottomNavigation.setOnTabSelectedListener(navListener);
