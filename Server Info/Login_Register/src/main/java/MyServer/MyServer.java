@@ -11,7 +11,9 @@ public class MyServer {
     will be the username and the value will be the password or hashed password*/
 	//public static HashMap<String, String> users = new HashMap<>();
 
-	public static HashMap<String, String> users = new HashMap<>();
+	public static HashMap<String, String> CustomerOrder = new HashMap<>();
+	public static HashMap<String, String> DeliveredBy = new HashMap<>();
+
 	public static void main(String[] args) {
 		SpringApplication.run(MyServer.class, args);
 	}
