@@ -239,40 +239,14 @@ public class UserController {
 		String foodOrder = request.getParameter("foodOrder");
 		String orderPickupLocation = request.getParameter("orderPickupLocation");
 		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
-				"VALUES (?, ?, ?, ?)";
+
 
 		//section for ordercheck and hashmap placement
 		if (!MyServer.CustomerOrder.containsKey(username)){
-			MyServer.CustomerOrder.put(username, foodOrder);
+			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-
-
-		//section for SQL stuff that will save in case of server failuer
-		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-
-			//get correct username
-			ps = conn.prepareStatement(selectUsername);
-			System.out.println(selectUsername);
-			ResultSet rs = ps.executeQuery();
-
-			//put on database
-			ps = conn.prepareStatement(insertSql);
-			ps.setString(1, username);
-			ps.setString(2, foodOrder);
-			ps.setString(3, orderPickupLocation);
-			ps.setString(4, orderDropoffLocation);
-			ps.executeUpdate();
-
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
-			e.printStackTrace();
-			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-		}
-
+	
+		MyServer.CustomerOrder.remove(username, foodOrder);
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
 
