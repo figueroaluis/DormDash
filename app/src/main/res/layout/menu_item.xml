@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_foodItem"
+        android:layout_width="350dp"
+        android:layout_height="20dp"
+        android:text="Get text for food from adapter"
+
+        />
+
+    <EditText
+        android:id="@+id/editText_foodDescription"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_foodItem"
+        android:ems="10"
+        android:hint="Special Requests (i.e. vegan, vegetarian, etc.)"
+        android:inputType="textPersonName"
+        android:textSize="10dp"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_selectFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_toEndOf="@+id/textView_foodItem" />
+
+
+</RelativeLayout>
