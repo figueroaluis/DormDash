@@ -24,6 +24,7 @@ import android.widget.Toast;
 //things for loopj/asynch http requests
 import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -43,7 +44,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     AppCompatButton signUpButton;
     AppCompatButton logInButton;
 
-    Button acceptButton;
+    Button acceptButton, logoutButton;
 
     private SharedPreferences mSharedPreferences;
     private String Name,Password;
@@ -148,7 +149,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println(s);
                         System.out.println(token);
 
-
+                        BasicClientCookie bccookie = new BasicClientCookie("token", token);
+                        bccookie.setVersion(1); //version of cookie protocol, depends on what protocol it follows --> 0 for Netscape, 1 for RFC 2109
+                        bccookie.setDomain(""); //domain in which cookie should be presented
+                        bccookie.setPath("/"); //path to which client returns cookie
+                        bccookie.setComment("Login Cookie"); //comment about purpose of cookie
 
                     }
 
@@ -215,6 +220,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         //implementing shared preferences
 
         mSharedPreferences = this.getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor mEditor = mSharedPreferences.edit();
 
         if(mSharedPreferences.contains(PREF_SKIP_LOGIN)) {
 
@@ -224,6 +230,19 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             acceptButton = (Button) v.findViewById(R.id.button_accept);
             acceptButton.setOnClickListener(this);
+
+            logoutButton = (Button) v.findViewById(R.id.button_logout);
+            logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    System.out.println("User clicked log out button");
+
+                    mEditor.clear();
+                    mEditor.commit();
+
+                }
+            });
 
             return v;
         }
@@ -261,7 +280,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         if(validUserData()) {
 
                             if(mSharedPreferences.contains(PREF_NAME) && mSharedPreferences.contains(PREF_PASSWD)) {
-                                SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+
 
                                 mEditor.putString(PREF_SKIP_LOGIN, "skip");
                                 mEditor.commit();
