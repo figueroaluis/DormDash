@@ -73,11 +73,17 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         }
     }
 
+
     // method to sign up
     public void onSignUpClicked(View view){
+
+        System.out.println("CLICKED YAY");
+
         AsyncHttpClient client = new AsyncHttpClient();
         final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
         client.setCookieStore(myCookieStore);
+
+        signUpButton = view.findViewById(R.id.signUp_button);
 
         // make sure that we have both a username and a password
         if(usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
@@ -92,6 +98,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             //SIGNUP MODE
             if(signUpMode){
+
 //            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
                 client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
@@ -124,11 +131,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 });
 
 
-            }else{
+
+            }else {
                 //LOG IN
                 // this means that they are in Log in mode, so we should log them in
-                System.out.println("MADE IT LOGIN");
-
+                System.out.println("LOG IN CLICKED YAY");
 
 
                 client.post("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
@@ -168,6 +175,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     }
                 });
             }
+
         }
     }
 
@@ -270,12 +278,13 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             logInButton = view.findViewById(R.id.logIn_button);
 
 
-
-            // sign up button
             logInButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //onSignUpClicked(view);
+
+                        signUpMode = false;
+
 
                         if(validUserData()) {
 
@@ -298,6 +307,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                         }
 
+                        System.out.println("BEFORE");
+                        onSignUpClicked(view);
+                        System.out.println("AFTER");
+
 
                     }
                 });
@@ -307,6 +320,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 {
                         @Override
                         public void onClick (View view) {
+
+                            signUpMode = true;
 
 
                             if(validUserData()) {
@@ -320,6 +335,10 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
 
                             }
+
+
+                            onSignUpClicked(view);
+
 
                 }
             });
