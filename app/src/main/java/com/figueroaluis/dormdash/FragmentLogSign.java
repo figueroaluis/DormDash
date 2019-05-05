@@ -73,7 +73,12 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             }
         } else if(view.getId() == R.id.dormdash_logo || view.getId() == R.id.logSign_backgroundLayout){
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
+
         }
     }
 
