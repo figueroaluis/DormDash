@@ -35,9 +35,8 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.9'
     //expandable textview
     implementation 'at.blogc:expandabletextview:1.0.5'
+    // picasso, image stuff
+    implementation 'com.squareup.picasso:picasso:2.71828'
     //add jsoup for webscraping
     implementation 'org.jsoup:jsoup:1.10.3'
-    //add picasso
-    compile group:'com.squareup.picasso', name:'picasso', version:'2.5.0'
-
-}
+   

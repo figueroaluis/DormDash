@@ -54,6 +54,15 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     public static final String PREF_PASSWD = "passwd";
     public static final String PREF_SKIP_LOGIN = "skip_login";
 
+    // go to profile page
+    public void showProfilePage(){
+        FragmentProfile fragmentProfile = new FragmentProfile();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragmentProfile, "findThisFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
 
     // implement a function that allows the button to open another view
     @Override
@@ -66,7 +75,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
         } else if(view.getId() == R.id.dormdash_logo || view.getId() == R.id.logSign_backgroundLayout){
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            try{
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
         } else if(view.getId() == R.id.signUp_button) {
             System.out.println(view.getId());
             System.out.println("Sign Up button clicked");
@@ -115,6 +128,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         System.out.println("ONSUCCESS sign up");
                         String s = new String(responseBody);
                         System.out.println(s);
+
 
 
                     }
