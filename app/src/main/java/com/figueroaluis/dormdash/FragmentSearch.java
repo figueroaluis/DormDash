@@ -21,9 +21,6 @@ public class FragmentSearch extends Fragment {
 
 
 
-
-
-
         return view;
     }
 }
