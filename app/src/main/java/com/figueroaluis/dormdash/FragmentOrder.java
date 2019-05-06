@@ -8,8 +8,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,10 +20,11 @@ import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.cookie.Cookie;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 
-public class FragmentOrder extends Fragment implements View.OnClickListener  {
+public class FragmentOrder extends Fragment implements View.OnClickListener {
     private AsyncHttpClient client;
 
 
@@ -28,8 +32,11 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     Button placeButton;
     TextView orderLabel;
     EditText orderText;
-    EditText pickUpLocationText;
+    EditText dropOffLocationText, pickUpLocationText;
+    Spinner pickUpLocations, dropOffLocations;
     String token = null;
+
+    String pickUpLocation, dropOffLocation;
 
 
     @Override
@@ -43,15 +50,29 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
             /** CORRECT **/
             client = new AsyncHttpClient();
             PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-            List cookies = cookieStore.getCookies();
-            System.out.println("COOKIE SHIT" + cookies.get(0));
-            String str = cookies.get(0).toString();
-            System.out.println(str);
+
+            String cookieName = "";
+            String cookieValue = "";
+            List<Cookie> cook = cookieStore.getCookies();
+            for (Cookie c : cook) {
+                cookieName = c.getName().toString();
+                cookieValue = c.getValue().toString();
+                System.out.println(cookieName);
+                System.out.println(cookieValue);
+            }
+
+//            System.out.println("PICK UP LOCATION: " + pickUpLocation);
+//            System.out.println("DROP OFF LOCATION: " + dropOffLocation);
+
 
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
             params.put("foodOrder", orderText.getText().toString().trim());
-            params.put("orderPickupLocation", pickUpLocationText.getText().toString().trim());
+//            params.put("orderPickupLocation", pickUpLocationText.getText().toString().trim());
+//            params.put("orderDropoffLocation", dropOffLocationText.getText().toString().trim());
+            params.put("orderPickupLocation", pickUpLocation);
+            params.put("orderDropoffLocation", dropOffLocation);
+            params.put("Authorization", cookieValue);
             //put drop off location
 //            /** CORRECT **/
 //            client = new AsyncHttpClient();
@@ -108,18 +129,17 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         List cookies = cookieStore.getCookies();
 //        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
         System.out.println(cookies.get(0));
-        System.out.println("FUCK");
         System.out.println(cookies.get(0).getClass().getName());
 
-        String cookieName = "";
-        String cookieValue = "";
-        List<Cookie> cook = cookieStore.getCookies();
-        for (Cookie c : cook) {
-            cookieName = c.getName().toString();
-            cookieValue = c.getValue().toString();
-            System.out.println(cookieName);
-            System.out.println(cookieValue);
-        }
+//        String cookieName = "";
+//        String cookieValue = "";
+//        List<Cookie> cook = cookieStore.getCookies();
+//        for (Cookie c : cook) {
+//            cookieName = c.getName().toString();
+//            cookieValue = c.getValue().toString();
+//            System.out.println(cookieName);
+//            System.out.println(cookieValue);
+//        }
 
 //        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
 //
@@ -129,18 +149,45 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
-        orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
-        pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
+        orderText = view.findViewById(R.id.editText_enterOrder);
+
+        pickUpLocations = view.findViewById(R.id.spinner_pickUpLocation);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.pickuplocations, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pickUpLocations.setAdapter(adapter);
+        pickUpLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                pickUpLocation = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        dropOffLocations = view.findViewById(R.id.spinner_dropOffLocation);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getContext(), R.array.dropofflocations, android.R.layout.simple_spinner_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropOffLocations.setAdapter(adapter1);
+        dropOffLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                dropOffLocation = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         placeButton = (Button) view.findViewById(R.id.button_placeButton);
         placeButton.setOnClickListener(this);
 
-
-
         return view;
 
     }
-
-
 
 }

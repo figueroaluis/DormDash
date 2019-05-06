@@ -19,6 +19,7 @@ import com.loopj.android.http.RequestParams;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 public class FragmentAcceptOrders extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
@@ -35,13 +36,21 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
             /** CORRECT **/
             client = new AsyncHttpClient();
             PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-            List cookies = cookieStore.getCookies();
-            System.out.println("COOKIE SHIT" + cookies.get(0));
-            String str = cookies.get(0).toString();
-            System.out.println(str);
+
+            String cookieName = "";
+            String cookieValue = "";
+            List<Cookie> cook = cookieStore.getCookies();
+            for (Cookie c : cook) {
+                cookieName = c.getName().toString();
+                cookieValue = c.getValue().toString();
+                System.out.println(cookieName);
+                System.out.println(cookieValue);
+            }
+
 
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
+            params.put("Authorization", cookieValue);
 //            params.put("foodOrder", orderText.getText().toString());
 //            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
 
