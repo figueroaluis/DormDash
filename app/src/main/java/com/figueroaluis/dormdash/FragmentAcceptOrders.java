@@ -55,7 +55,7 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
 //            params.put("foodOrder", orderText.getText().toString());
 //            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
 
-            client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
+            client.post("http://3.14.202.131:80/order", params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     // called before request is started
@@ -92,7 +92,7 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
         RequestParams params = new RequestParams();
 
 
-        client.get("http://10.0.2.2:80/feed", params, new AsyncHttpResponseHandler() {
+        client.get("http://3.14.202.131:80/feed", params, new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {
                 // called before request is started
