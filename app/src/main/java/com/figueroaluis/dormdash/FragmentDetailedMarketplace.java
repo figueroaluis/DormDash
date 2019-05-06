@@ -38,7 +38,6 @@ public class FragmentDetailedMarketplace extends Fragment implements View.OnClic
         mpMenuItemsList.add(new MenuItem("Same Thing at the Grill (gf)(o)","Breakfast"));
         mpMenuItemsList.add(new MenuItem("Sandwich (v)(o)(gf)","Breakfast/Lunch/Dinner"));
 
-
         menuItemAdapter = new MenuItemAdapter(mContext, mpMenuItemsList);
         mListView = view.findViewById(R.id.marketplace_menu_items_listview);
         mListView.setAdapter(menuItemAdapter);

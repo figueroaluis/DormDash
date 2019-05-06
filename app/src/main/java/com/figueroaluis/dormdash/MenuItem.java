@@ -2,6 +2,7 @@ package com.figueroaluis.dormdash;
 
 public class MenuItem {
 
+    String location;
     String foodName;
     String foodType;
 

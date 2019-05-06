@@ -6,20 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MenuItemAdapter extends BaseAdapter {
+public class MenuItemAdapter extends BaseAdapter implements Filterable {
 
     private Context mContext;
+
     private ArrayList<MenuItem> menuItemList;
+    private ArrayList<MenuItem> originalListsForFilter;
+
     private LayoutInflater mInflater;
+
+    private ArrayList<MenuItem> allMenuItems;
+    private ArrayList<MenuItem> mpMenuItems;
+    private ArrayList<MenuItem> gbMenuItems;
+    private ArrayList<MenuItem> ccMenuItems;
+    private ArrayList<MenuItem> coolerMenuItems;
+    private ArrayList<MenuItem> filteredMenuItems;
 
     public MenuItemAdapter(Context mContext, ArrayList<MenuItem> menuItemList) {
         this.mContext = mContext;
         this.menuItemList = menuItemList;
+        this.originalListsForFilter = new ArrayList<>(menuItemList);
+
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -77,6 +91,39 @@ public class MenuItemAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults results = new FilterResults();
+
+                if(charSequence == null || charSequence.length() == 0){
+                    results.values = originalListsForFilter;
+                    results.count = originalListsForFilter.size();
+
+                }else{
+                    ArrayList<MenuItem> filterResultData = new ArrayList<>();
+
+                    for(MenuItem item : originalListsForFilter){
+                        if(item.getFoodName().toLowerCase().contains(charSequence.toString().toLowerCase())){
+                            filterResultData.add(item);
+                        }
+                    }
+                    results.values = filterResultData;
+                    results.count = filterResultData.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                menuItemList = (ArrayList<MenuItem>)filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public static class ViewHolder{
