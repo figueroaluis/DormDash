@@ -127,7 +127,9 @@ public class UserController {
 					if (storedHashedKey.equals(hashedKey)) {
 
 						//We will sign our JWT with our ApiKey secret
-						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setExpiration(new Date(System.currentTimeMillis() + 86400000)).setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
+						String jws = Jwts.builder().setHeaderParam("typ", "JWT").
+                                setExpiration(new Date(System.currentTimeMillis() + 86400000)).
+                                setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
 						responseHeaders.set("Authorization", jws);
 //						MyServer.users.put(username, jws);
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
@@ -222,6 +224,7 @@ public class UserController {
             se.printStackTrace();
             return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
         }
+
         if (MyServer.CustomerOrder.containsKey(order_id)){
             return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
@@ -443,6 +446,55 @@ public class UserController {
         return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/status", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> status(HttpServletRequest request) {
+
+        String username = request.getParameter("username");
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        int status = 0;
+        String sqlStatement = "SELECT is_working FROM users WHERE username = ?;";
+        String token;
+
+        try {
+            final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+            token = request.getHeader("Authorization");
+            responseHeaders.set("Authorization", token);
+
+            System.out.println(claims.getSubject());
+        } catch (final SignatureException e) {
+            return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+        }
+        //SQL STUFF
+        try {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+            //put on database
+            ps = conn.prepareStatement(sqlStatement);
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) status = Integer.parseInt(rs.getString("is_working"));
+
+        } catch(Exception e) {
+            System.out.println("Oops there was an error");
+            e.printStackTrace();
+            return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+      //  JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+      //  return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+
+        //select the isWorking from users
+        //see worktime similar code, change sql statement
+        if (status == 1) return new ResponseEntity("y", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity("n", responseHeaders, HttpStatus.OK);
+
+
+    }
 //    @RequestMapping(value = "/logout", method = RequestMethod.DELETE) // <-- setup the endpoint URL at /hello with the HTTP POST method
 //    public ResponseEntity<String> logout(HttpServletRequest request) {
 //        HttpHeaders responseHeaders = new HttpHeaders();

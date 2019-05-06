@@ -55,6 +55,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     AppCompatButton signUpButton;
     AppCompatButton logInButton;
 
+    String uName;
+
     Button acceptButton, logoutButton;
     Switch workSwitch;
 
@@ -187,18 +189,24 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         //Test out the response with this
                         System.out.println("ONSUCCESS log in");
                         String s = new String(responseBody);
-//                        String token = headers[0].getValue();
-                        String token = "dfsdfdsdfsdfsdfsdfdsf";
+                      String token = headers[0].getValue();
+//                        String token = "TEMPORARY";
 
 
-                       /** CORRECT **/
+                        /** CORRECT **/
                         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
                         client.setCookieStore(cookieStore);
                         BasicClientCookie newCookie = new BasicClientCookie("token", token);
-                        cookieStore.addCookie(newCookie);
+                        System.out.println(usernameEditText.getText().toString());
+                        newCookie.setDomain(usernameEditText.getText().toString());
+
+                        uName = usernameEditText.getText().toString();
+                        BasicClientCookie nameCookie = new BasicClientCookie("name", uName);
+
                         System.out.println("TOKEN HERE: " + token);
-
-
+                        System.out.println("USERNAME IN COOKIE");
+                        cookieStore.addCookie(nameCookie);
+                        cookieStore.addCookie(newCookie);
 
 
                         final SharedPreferences.Editor mEditor1 = mSharedPreferences.edit();
@@ -331,8 +339,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 public void onClick(View view) {
 
                     AsyncHttpClient client1 = new AsyncHttpClient();
-                    final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
-                    client1.setCookieStore(myCookieStore);
+
 
 
 
@@ -488,6 +495,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                             if(mSharedPreferences.contains(PREF_NAME) && mSharedPreferences.contains(PREF_PASSWD)) {
 
+                                onSignUpClicked(view);
 
                                 mEditor.putString(PREF_SKIP_LOGIN, "skip");
                                 mEditor.commit();
