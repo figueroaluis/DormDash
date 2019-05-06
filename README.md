@@ -8,7 +8,7 @@ For our project, we created an AWS server on which we ran a Virtual Machine with
 
 
 #### Connecting to the Server
-```IP address: ec2-3-14-202-131.us-east-2.compute.amazonaws.com```
+```IP address: 3.14.202.131```
 ```Port Number: 80```
 
 When you need to connect to the server, let us know and we'll start it
@@ -17,10 +17,10 @@ When you need to connect to the server, let us know and we'll start it
 
 1. When in Terminal, navigate to folder with the pem key and input this command
 
-```ssh -i dormdash.pem ec2-user@ec2-34-209-125-83.us-west-2.compute.amazonaws.com```
+```ssh -i dormdash_final.pem ec2-user@e3.14.202.131```
 
 2. To run a jar, run the following command on the terminal:
-```java -jar "name of jar".jar```
+```sudo java -jar "name of jar".jar```
 
 Within our zip file, most of our classes can be found under DormDash/app/src/main/java/com/figueroaluis/dormdash. More classes for our server is under DormDash/Server Info/Login_Register/src/main/java/MyServer. Our SQL file for table creation is under DormDash/Server Info/DormDash_db.sql and we called our database DormDash.
 
