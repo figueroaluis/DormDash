@@ -1,5 +1,7 @@
 package MyServer;
 
+import java.util.Map;
+
 /**
  * Created by Work on 5/3/19.
  */
@@ -12,6 +14,16 @@ public class sessionGen {
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
         return builder.toString();
+    }
+
+
+    public static <K, V> K getKey(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }
 

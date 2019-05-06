@@ -2,6 +2,7 @@ package MyServer;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.SignatureException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
@@ -27,7 +28,7 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
-		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
+		String username = request.getParameter("username"); //Grabbing name and age parameters
 		String password = request.getParameter("password");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
@@ -128,7 +129,7 @@ public class UserController {
 						//We will sign our JWT with our ApiKey secret
 						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
 						responseHeaders.set("Authorization", jws);
-						MyServer.users.put(username, jws);
+//						MyServer.users.put(username, jws);
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
 					}
 				}
@@ -157,13 +158,19 @@ public class UserController {
 
 		//section to verify authorization. If it fails jump to the catch clause
 
-		try {
+		String token = null;
+        String order_id = null;
+
+
+        try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
 			System.out.println(claims.getSubject());
-			System.out.println("lol");
 		} catch (final SignatureException e) {
-			return new ResponseEntity("{\"message\":\"You are not logged in.\"}", responseHeaders, HttpStatus.FORBIDDEN);
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
 
 		String username = request.getParameter("username");
@@ -173,10 +180,15 @@ public class UserController {
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
+        String grabOrder = "Select orderID From orders Where username = '" + username +"';";
 
-		//section for SQL stuff
+		//section for ordercheck and hashmap placement
+
+
+		//section for SQL stuff that will save in case of server failuer
 		try {
-			Class.forName(JDBC_DRIVER);
+
+            Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
@@ -192,56 +204,143 @@ public class UserController {
 			ps.setString(4, orderDropoffLocation);
 			ps.executeUpdate();
 
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
+            ps = conn.prepareStatement(grabOrder);
+            ResultSet order_rs = ps.executeQuery();
+            System.out.println(order_rs);
+
+            while (order_rs.next()) {
+
+                order_id = order_rs.getString("orderID");
+            }
+
+		} catch(ClassNotFoundException e) {
+			System.out.println("Oops there was an error.");
 			e.printStackTrace();
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
+		catch (SQLException se) {
+            se.printStackTrace();
+            return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        if (MyServer.CustomerOrder.containsKey(order_id)){
+            return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
+        }
+        MyServer.CustomerOrder.put(order_id, username);
+        MyServer.OpenOrders.put(order_id, foodOrder);
+
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
+	}
+	//if the consumer has recieved the order
+	@RequestMapping(value = "/recievedorder", method = RequestMethod.POST) // <-- setup the endpoint URL at /order with the HTTP POST method
+	public ResponseEntity<String> recievedorder(@RequestBody String body, HttpServletRequest request) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+		System.out.println("made it to here");
+
+		//section to verify authorization. If it fails jump to the catch clause
+		String token;
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+
+		String username = request.getParameter("username");
+        //begin different sections that affect the user and the delivery person
+
+        //method 1: complete order for user
+        //method 2: complete order for deliveryperson
+
+        if (MyServer.CustomerOrder.containsKey(username) || MyServer.DeliveredBy.containsKey(username)){
+            if (MyServer.CustomerOrder.get(username).equals(username)){
+
+            }
+            if (MyServer.DeliveredBy.get(username).equals(username)){
+
+            }
+        }
+
+		//section for ordercheck and hashmap placement
+		if (!MyServer.CustomerOrder.containsKey(username)){
+			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		MyServer.CustomerOrder.remove(username);
+
+		return new ResponseEntity("{\"message\":\"Error\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
 	}
-	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/cancelorder", method = RequestMethod.POST)
 	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
-		String username = request.getParameter("username");
-		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+        String username = request.getParameter("username");
+		String orderID = request.getParameter("orderID");
+		String deleteSql = "DELETE FROM orders WHERE username = ?" + " AND orderID = ?;";
+		String token;
 
 		try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
 			System.out.println(claims.getSubject());
-			System.out.println("lol");
 		} catch (final SignatureException e) {
-			return new ResponseEntity("{\"message\":\"You are not logged in. GET THE FUCK OUT\"}", responseHeaders, HttpStatus.FORBIDDEN);
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
 
+		//section for ordercheck and hashmap placement
+        System.out.println("This is the keyset" + MyServer.CustomerOrder.keySet());
+
+
+        if (!MyServer.CustomerOrder.containsKey(orderID)){
+			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+        MyServer.CustomerOrder.remove(orderID);
+        MyServer.OpenOrders.remove(orderID);
+        //if someone is currently delivering this order...
+        if (MyServer.DeliveredBy.containsValue(orderID)){
+            String key = sessionGen.getKey(MyServer.DeliveredBy, orderID);
+            System.out.println(key);
+            MyServer.DeliveredBy.remove(key);
+            /**FIXME need to update in the future to send a message to the deliverer **/
+        }
 
 		try {
 
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			//get correct username
-			ps = conn.prepareStatement(selectUsername);
-			System.out.println(selectUsername);
-			ResultSet rs = ps.executeQuery();
-			//put on database
-			ps = conn.prepareStatement(insertSql);
+			//database
+			ps = conn.prepareStatement(deleteSql);
+            ps.setString(1, username);
+            ps.setString(2, orderID);
 			ps.executeUpdate();
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
-		} catch (SQLException se) {
+            return new ResponseEntity("{\"message\":\"Class Error.\"}", responseHeaders, HttpStatus.OK);
+
+        } catch (SQLException se) {
 			System.out.println("SQL Exception");
+            return new ResponseEntity("{\"message\":\"SQL Error\"}", responseHeaders, HttpStatus.OK);
 
-		} catch(Exception e) {
+
+        } catch(Exception e) {
 			System.out.println("Oops there was an error");
+            return new ResponseEntity("{\"message\":\"Some other Exception Error.\"}", responseHeaders, HttpStatus.OK);
 
-		}
-		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+        }
+		return new ResponseEntity("{\"message\":\"Order was canceled!\"}", responseHeaders, HttpStatus.OK);
 
 	}
 
@@ -252,42 +351,108 @@ public class UserController {
 		responseHeaders.set("Content-Type", "application/json");
 
 		String username = request.getParameter("username");
-		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
+//        String recipient = request.getParameter("recipient");
+		String orderID = request.getParameter("orderID");
+        String workstatus = request.getParameter("working");
+		String selectUsername = "SELECT username FROM orders WHERE orderID = ?;";
 
+		String token;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			//get correct username
-			ps = conn.prepareStatement(selectUsername);
-			System.out.println(selectUsername);
-			ResultSet rs = ps.executeQuery();
-			System.out.println("here");
-			int id = 0;
-			if(rs.next()){
-				id = rs.getInt("orderID");
-			}
-			System.out.println(id);
-			String insertSql = "UPDATE users SET orderAccepted = " + id + " WHERE username = '" + username + "';";
-			//put on database
-			ps = conn.prepareStatement(insertSql);
-			ps.executeUpdate();
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
-		} catch(ClassNotFoundException cne) {
-			System.out.println("Class Not Found Exception");
-		} catch (SQLException se) {
-			System.out.println("SQL Exception");
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
 
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
-
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
+
+
+		//check if working
+		if (Integer.parseInt(workstatus) == 0) {
+			return new ResponseEntity("{\"message\":\"You aren't working at the moment" +
+					". Activate your work status.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		//check if you already grabbed this particular order
+		if (MyServer.DeliveredBy.containsKey(orderID) && MyServer.DeliveredBy.get(orderID).equals(username)){
+			return new ResponseEntity("{\"message\":\"You already grabbed this order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		MyServer.DeliveredBy.put(orderID, username);
+        //need to mark the master list of orders that it is taken
+        MyServer.OpenOrders.remove(orderID);
+
 
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
 
 
 
 	}
+
+	@RequestMapping(value = "/worktime", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
+	public ResponseEntity<String> worktime(HttpServletRequest request) {
+		String workStatus = request.getParameter("working");
+        String username = request.getParameter("username");
+
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-Type", "application/json");
+
+		String updateSql = "UPDATE Users SET is_working = ?" + "WHERE username = '" + username + "';";
+
+
+		String token;
+		try {
+			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
+
+			token = request.getHeader("Authorization");
+			responseHeaders.set("Authorization", token);
+
+			System.out.println(claims.getSubject());
+		} catch (final SignatureException e) {
+			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
+		}
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+			//put on database
+			ps = conn.prepareStatement(updateSql);
+			ps.setString(1, workStatus);
+
+			ps.executeUpdate();
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+			e.printStackTrace();
+			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+		if (Integer.parseInt(workStatus) == 0){
+			return new ResponseEntity("{\"message\":\"You are not working anymore.\"}", responseHeaders, HttpStatus.OK);}
+		return new ResponseEntity("{\"message\":\"You are working now.\"}", responseHeaders, HttpStatus.OK);
+
+	}
+
+    @RequestMapping(value = "/feed", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> feed(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+    }
+
+
+
 
 	//Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {

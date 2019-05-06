@@ -8,21 +8,29 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //things for loopj/asynch http requests
 import com.loopj.android.http.*;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
@@ -38,13 +46,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     // check to see if we are in sign up or log in
     Boolean signUpMode = true;
     // buttons and textviews
-    TextView loginTextView;
+    TextView loginTextView, usernameProfileTextView, customerType;
     EditText usernameEditText;
     EditText passwordEditText;
     AppCompatButton signUpButton;
     AppCompatButton logInButton;
 
     Button acceptButton, logoutButton;
+    SwitchCompat workSwitch;
 
     private SharedPreferences mSharedPreferences;
     private String Name,Password;
@@ -53,6 +62,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     public static final String PREF_NAME = "name";
     public static final String PREF_PASSWD = "passwd";
     public static final String PREF_SKIP_LOGIN = "skip_login";
+
+    private ListView mListView;
+    private Context mContext;
+    private FragmentProfileAdapter adapter;
+    private ArrayList<String> optionItemNames;
+    private ArrayList<ProfileOptionItem> optionItemList;
+    private ImageView userImage;
+
 
     // go to profile page
     public void showProfilePage(){
@@ -167,13 +184,26 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         String s = new String(responseBody);
                         String token = headers[0].getValue();
                         System.out.println(s);
-                        System.out.println(token);
+                        System.out.println("TOKEN HERE: " + token);
+
+                        final SharedPreferences.Editor mEditor1 = mSharedPreferences.edit();
+                        mEditor1.putString(PREF_NAME, usernameEditText.getText().toString());
+                        mEditor1.putString(PREF_PASSWD, passwordEditText.getText().toString());
 
                         BasicClientCookie bccookie = new BasicClientCookie("token", token);
                         bccookie.setVersion(1); //version of cookie protocol, depends on what protocol it follows --> 0 for Netscape, 1 for RFC 2109
-                        bccookie.setDomain(""); //domain in which cookie should be presented
-                        bccookie.setPath("/"); //path to which client returns cookie
+//                        bccookie.setDomain(""); //domain in which cookie should be presented
+//                        bccookie.setPath("/"); //path to which client returns cookie
                         bccookie.setComment("Login Cookie"); //comment about purpose of cookie
+
+
+                        mEditor1.putString(PREF_SKIP_LOGIN, "skip");
+                        mEditor1.commit();
+
+                        FragmentHome fragh = new FragmentHome();
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragh, "Find this fragment")
+                                .addToBackStack(null).commit();
 
                     }
 
@@ -247,21 +277,147 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             System.out.println("Recognized User");
 
-            View v = inflater.inflate(R.layout.fragment_accept_orders, container, false);
+            View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-            acceptButton = (Button) v.findViewById(R.id.button_accept);
-            acceptButton.setOnClickListener(this);
+            optionItemNames = new ArrayList<>();
+            optionItemList = new ArrayList<>();
+            optionItemNames.add("Payment");
+            optionItemNames.add("Help");
+            optionItemNames.add("Settings");
+            optionItemNames.add("About");
+            optionItemNames.add("Log Out");
 
-            logoutButton = (Button) v.findViewById(R.id.button_logout);
-            logoutButton.setOnClickListener(new View.OnClickListener() {
+            workSwitch = v.findViewById(R.id.profile_option_icon);
+            usernameProfileTextView = v.findViewById(R.id.profile_username_textview);
+            customerType = v.findViewById(R.id.profile_usertype_textview);
+            customerType.setText("Client");
+
+
+            final String username = mSharedPreferences.getString(PREF_NAME, null);
+            usernameProfileTextView.setText(username);
+
+
+            for(int i = 0; i < optionItemNames.size(); i++){
+                optionItemList.add(new ProfileOptionItem(optionItemNames.get(i)));
+            }
+
+            adapter = new FragmentProfileAdapter(getContext(), optionItemList);
+            mListView = v.findViewById(R.id.option_items_listview);
+            mListView.setAdapter(adapter);
+
+            userImage = v.findViewById(R.id.profile_user_imageview);
+            Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
+
+            workSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    System.out.println("User clicked log out button");
+                    AsyncHttpClient client1 = new AsyncHttpClient();
+                    final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
+                    client1.setCookieStore(myCookieStore);
 
-                    mEditor.clear();
-                    mEditor.commit();
+                    RequestParams params = new RequestParams();
+                    params.put("username", usernameProfileTextView.getText());
+                    params.put("working", "0");
+                    System.out.println(usernameProfileTextView.getText());
 
+                    client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                            System.out.println("ON SUCCESS as WORKER");
+                            String s = new String(responseBody);
+                            System.out.println(s);
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                            System.out.println("failure to send worktime data initially");
+
+                        }
+                    });
+
+
+                    if(workSwitch.isChecked()) {
+
+                        customerType.setText("Worker");
+
+                       // RequestParams params = new RequestParams();
+                        params.put("username", usernameProfileTextView.getText());
+                        params.put("working", "1");
+
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                                System.out.println("ON SUCCESS as WORKER");
+                                String s = new String(responseBody);
+                                System.out.println(s);
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                                System.out.println("failure to set worker");
+
+                            }
+                        });
+
+                    }
+
+                    else {
+                        customerType.setText("Client");
+
+                       // RequestParams params = new RequestParams();
+                        params.put("username", usernameProfileTextView.getText());
+                        params.put("working", "0");
+
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                                System.out.println("ON SUCCESS as CLIENT");
+                                String s = new String(responseBody);
+                                System.out.println(s);
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                                System.out.println("failure to set client");
+
+                            }
+                        });
+
+                    }
+                }
+            });
+
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    ProfileOptionItem selectedOption = optionItemList.get(position);
+
+                    if(selectedOption.text.equals("Log Out")){
+                        // delete the shared preferences
+                        // open up the new fragment that replaces the profile screen
+
+                        mEditor.clear();
+                        mEditor.commit();
+
+                        //Toast.makeText(getActivity().getApplicationContext(),"Log out is clicked",Toast.LENGTH_SHORT).show();
+
+                        FragmentLogSign fragls = new FragmentLogSign();
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragls, "Find this fragment")
+                                .addToBackStack(null).commit();
+
+
+                    }
                 }
             });
 
@@ -307,11 +463,15 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                                 mEditor.putString(PREF_SKIP_LOGIN, "skip");
                                 mEditor.commit();
 
-                                //example code starts the intent of the login activity over, unsure what the fragment equivalent is
+                                FragmentHome fragh = new FragmentHome();
+                                getActivity().getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, fragh, "Find this fragment")
+                                        .addToBackStack(null).commit();
 
                             } else {
 
-                                Toast.makeText(getActivity().getApplicationContext(), "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                                onSignUpClicked(view);
+                                //Toast.makeText(getActivity().getApplicationContext(), "Invalid Username or Password", Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
@@ -320,9 +480,9 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                         }
 
-                        System.out.println("BEFORE");
-                        onSignUpClicked(view);
-                        System.out.println("AFTER");
+
+                        //onSignUpClicked(view);
+
 
 
                     }
@@ -345,6 +505,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                                 mEditor.putString(PREF_NAME, Name);
                                 mEditor.putString(PREF_PASSWD, Password);
                                 mEditor.commit(); //sign up the user's information in the shared preferences
+
+                                Toast.makeText(getActivity().getApplicationContext(),"Sign up confirmed...Please log in", Toast.LENGTH_SHORT).show();
 
 
                             }
