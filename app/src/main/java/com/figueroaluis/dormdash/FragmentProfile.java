@@ -1,7 +1,6 @@
 package com.figueroaluis.dormdash;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,28 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
     private ArrayList<ProfileOptionItem> optionItemList;
     private ImageView userImage;
 
+    private Switch newSwitch;
+
+
+    public class switchBoolean{
+        private boolean workerModeOn;
+        private String successMessage;
+
+        public switchBoolean(boolean workerModeOn, String successMessage){
+            this.workerModeOn = workerModeOn;
+            this.successMessage = successMessage;
+        }
+
+        public boolean isWorkerModeOn(){
+            return this.workerModeOn;
+        }
+
+        public String getSuccessMessage(){
+            return this.successMessage;
+        }
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,6 +58,9 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mContext = getContext();
+
+        newSwitch = view.findViewById(R.id.profile_option_icon);
+        EventBus.getDefault().post(new switchBoolean(newSwitch.isChecked(), "Success"));
 
         optionItemNames = new ArrayList<>();
         optionItemList = new ArrayList<>();
@@ -73,8 +100,10 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     @Override
     public void onClick(View view){
 
     }
 }
+

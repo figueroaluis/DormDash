@@ -1,6 +1,5 @@
 package com.figueroaluis.dormdash;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,12 +17,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
-import java.net.HttpCookie;
-import java.util.Iterator;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 public class FragmentOrder extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
@@ -32,7 +28,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
     Button placeButton;
     TextView orderLabel;
-    TextView orderText;
+    EditText orderText;
     EditText pickUpLocationText;
     String token = null;
 

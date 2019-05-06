@@ -1,7 +1,6 @@
 package com.figueroaluis.dormdash;
 
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,18 +10,18 @@ import android.util.Log;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,10 +33,23 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationItem ordersButton_navBar;
     AHBottomNavigationItem profile_navBar;
 
+    boolean switchMode;
+
+    @Subscribe
+    public void onEvent(FragmentProfile.switchBoolean event){
+        if(event.isWorkerModeOn()){
+            switchMode = true;
+        }else{
+            switchMode = false;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        EventBus.getDefault().register(this);
 
         // bottom view stuff
         bottomNavigation = findViewById(R.id.bottom_navigation);
@@ -72,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new FragmentHome();
                     }else if(position==1){
                         selectedFragment = new FragmentSearch();
-                    } else if(position==2){
+                    } else if(position==2 && !switchMode){
                         // open the sign up page
                         selectedFragment = new FragmentOrder();
+                    } else if(position==2 && switchMode) {
+                        selectedFragment = new FragmentAcceptOrders();
                     } else if(position==3){
                         // open the log/sign page
                         selectedFragment = new FragmentLogSign();
@@ -118,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -126,5 +139,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // unregister the event
+        EventBus.getDefault().unregister(this);
+    }
 }
 

@@ -38,4 +38,6 @@ dependencies {
     // dealing with images
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
+    // sending from fragment to fragment
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }
