@@ -182,10 +182,7 @@ public class UserController {
         String grabOrder = "Select orderID From orders Where username = '" + username +"';";
 
 		//section for ordercheck and hashmap placement
-		if (MyServer.CustomerOrder.containsKey(username)){
-			return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
-		}
 
 		//section for SQL stuff that will save in case of server failuer
 		try {
@@ -215,14 +212,21 @@ public class UserController {
                 order_id = order_rs.getString("orderID");
             }
 
-
-
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
+		} catch(ClassNotFoundException e) {
+			System.out.println("Oops there was an error.");
 			e.printStackTrace();
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-        MyServer.CustomerOrder.put(username, order_id);
+		catch (SQLException se) {
+            se.printStackTrace();
+            return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        if (MyServer.CustomerOrder.containsKey(order_id)){
+            return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
+        }
+        MyServer.CustomerOrder.put(order_id, username);
+        MyServer.OpenOrders.put(order_id, foodOrder);
 
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
@@ -267,7 +271,7 @@ public class UserController {
 		if (!MyServer.CustomerOrder.containsKey(username)){
 			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-	
+
 		MyServer.CustomerOrder.remove(username);
 
 		return new ResponseEntity("{\"message\":\"Error\"}", responseHeaders, HttpStatus.BAD_REQUEST);
@@ -278,10 +282,9 @@ public class UserController {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
-		String username = request.getParameter("username");
-		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = ?;";
-		String insertSql = "DELETE FROM orders WHERE username = ?" + " AND foodOrder = ?;";
+        String username = request.getParameter("username");
+		String orderID = request.getParameter("orderID");
+		String deleteSql = "DELETE FROM orders WHERE username = ?" + " AND orderID = ?;";
 		String token;
 
 		try {
@@ -297,41 +300,46 @@ public class UserController {
 
 		//section for ordercheck and hashmap placement
         System.out.println("This is the keyset" + MyServer.CustomerOrder.keySet());
-        System.out.println(username);
-        System.out.println(order);
 
-        System.out.println(!MyServer.CustomerOrder.containsKey(username));
-        if (!MyServer.CustomerOrder.containsKey(username)){
+
+        if (!MyServer.CustomerOrder.containsKey(orderID)){
 			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-        MyServer.CustomerOrder.remove(username);
-
-
+        MyServer.CustomerOrder.remove(orderID);
+        MyServer.OpenOrders.remove(orderID);
+        //if someone is currently delivering this order...
+        if (MyServer.DeliveredBy.containsValue(orderID)){
+            String key = sessionGen.getKey(MyServer.DeliveredBy, orderID);
+            System.out.println(key);
+            MyServer.DeliveredBy.remove(key);
+            /**FIXME need to update in the future to send a message to the deliverer **/
+        }
 
 		try {
 
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			//get correct username
-			ps = conn.prepareStatement(selectUsername);
+			//database
+			ps = conn.prepareStatement(deleteSql);
             ps.setString(1, username);
-			System.out.println(selectUsername);
-			ResultSet rs = ps.executeQuery();
-			//put on database
-			ps = conn.prepareStatement(insertSql);
-            ps.setString(1, username);
-            ps.setString(2, order);
+            ps.setString(2, orderID);
 			ps.executeUpdate();
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
-		} catch (SQLException se) {
+            return new ResponseEntity("{\"message\":\"Class Error.\"}", responseHeaders, HttpStatus.OK);
+
+        } catch (SQLException se) {
 			System.out.println("SQL Exception");
+            return new ResponseEntity("{\"message\":\"SQL Error\"}", responseHeaders, HttpStatus.OK);
 
-		} catch(Exception e) {
+
+        } catch(Exception e) {
 			System.out.println("Oops there was an error");
+            return new ResponseEntity("{\"message\":\"Some other Exception Error.\"}", responseHeaders, HttpStatus.OK);
 
-		}
-		return new ResponseEntity("{\"message\":\"order canceled\"}", responseHeaders, HttpStatus.OK);
+
+        }
+		return new ResponseEntity("{\"message\":\"Order was canceled!\"}", responseHeaders, HttpStatus.OK);
 
 	}
 
@@ -342,8 +350,8 @@ public class UserController {
 		responseHeaders.set("Content-Type", "application/json");
 
 		String username = request.getParameter("username");
-        String recipient = request.getParameter("recipient");
-		String order = request.getParameter("orderID");
+//        String recipient = request.getParameter("recipient");
+		String orderID = request.getParameter("orderID");
         String workstatus = request.getParameter("working");
 		String selectUsername = "SELECT username FROM orders WHERE orderID = ?;";
 
@@ -366,14 +374,14 @@ public class UserController {
 					". Activate your work status.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 
-		//section for ordercheck and hashmap placement
-		if (MyServer.DeliveredBy.containsKey(username)){
-			return new ResponseEntity("{\"message\":\"You already have an active order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		//check if you already grabbed this particular order
+		if (MyServer.DeliveredBy.containsKey(orderID) && MyServer.DeliveredBy.get(orderID).equals(username)){
+			return new ResponseEntity("{\"message\":\"You already grabbed this order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 
-		MyServer.DeliveredBy.put(username, recipient);
-
-		
+		MyServer.DeliveredBy.put(orderID, username);
+        //need to mark the master list of orders that it is taken
+        MyServer.OpenOrders.remove(orderID);
 
 
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);

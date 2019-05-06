@@ -11,8 +11,10 @@ public class MyServer {
     will be the username and the value will be the password or hashed password*/
 	//public static HashMap<String, String> users = new HashMap<>();
 
-	public static HashMap<String, String> CustomerOrder = new HashMap<>(); //key is username, orderid is value
-	public static HashMap<String, String> DeliveredBy = new HashMap<>(); //key is username of deliveryperson, value is recipient username
+	public static HashMap<String, String> OpenOrders = new HashMap<>(); //key is orderID, value is orderText
+	public static HashMap<String, String> CustomerOrder = new HashMap<>(); //key is order_id, username is value
+	public static HashMap<String, String> DeliveredBy = new HashMap<>(); //key is username of orderID,
+																			// value is deliveryperson username
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyServer.class, args);
