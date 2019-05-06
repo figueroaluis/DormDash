@@ -10,6 +10,7 @@ For our project, we created an AWS server on which we ran a Virtual Machine with
 #### Connecting to the Server
 ```IP address: 3.14.202.131```
 ```Port Number: 80```
+```Password: D0rmdash!```
 
 When you need to connect to the server, let us know and we'll start it
 
@@ -23,6 +24,8 @@ When you need to connect to the server, let us know and we'll start it
 ```sudo java -jar "name of jar".jar```
 
 Within our zip file, most of our classes can be found under DormDash/app/src/main/java/com/figueroaluis/dormdash. More classes for our server is under DormDash/Server Info/Login_Register/src/main/java/MyServer. Our SQL file for table creation is under DormDash/Server Info/DormDash_db.sql and we called our database DormDash.
+
+In order to use cancelOrder, you need username and orderID as parameters.
 
 ### Project Info:
 Initially we intended on webscraping the Marketplace and Coffee Cart websites to get menus for those tables. We created a working java file that scraped the websites, added the data to the database, and then pulled the data from the database to add to the website. We hoped this would work but we ran into a lot of issues along the way and ended up having to manually enter food data. It was difficult to account for every possible formatting of the website because there are different times and formatting used for each day.
