@@ -27,7 +27,7 @@ public class UserController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
-		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
+		String username = request.getParameter("username"); //Grabbing name and age parameters
 		String password = request.getParameter("password");
 		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
@@ -157,9 +157,11 @@ public class UserController {
 
 		//section to verify authorization. If it fails jump to the catch clause
 
+		String token = null;
+        String order_id = null;
 
-		String token;
-		try {
+
+        try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
 			token = request.getHeader("Authorization");
@@ -177,16 +179,18 @@ public class UserController {
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
+        String grabOrder = "Select orderID From orders Where username = '" + username +"';";
 
 		//section for ordercheck and hashmap placement
-		if (!MyServer.CustomerOrder.containsKey(username)){
-			MyServer.CustomerOrder.put(username, foodOrder);
-		}
+		if (MyServer.CustomerOrder.containsKey(username)){
+			return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
+		}
 
 		//section for SQL stuff that will save in case of server failuer
 		try {
-			Class.forName(JDBC_DRIVER);
+
+            Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
@@ -202,17 +206,28 @@ public class UserController {
 			ps.setString(4, orderDropoffLocation);
 			ps.executeUpdate();
 
+            ps = conn.prepareStatement(grabOrder);
+            ResultSet order_rs = ps.executeQuery();
+            System.out.println(order_rs);
+
+            while (order_rs.next()) {
+
+                order_id = order_rs.getString("orderID");
+            }
+
+
+
 		} catch(Exception e) {
 			System.out.println("Oops there was an error");
 			e.printStackTrace();
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
+        MyServer.CustomerOrder.put(username, order_id);
 
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
-
 	}
-
+	//if the consumer has recieved the order
 	@RequestMapping(value = "/recievedorder", method = RequestMethod.POST) // <-- setup the endpoint URL at /order with the HTTP POST method
 	public ResponseEntity<String> recievedorder(@RequestBody String body, HttpServletRequest request) {
 
@@ -221,8 +236,6 @@ public class UserController {
 		System.out.println("made it to here");
 
 		//section to verify authorization. If it fails jump to the catch clause
-
-
 		String token;
 		try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
@@ -236,19 +249,28 @@ public class UserController {
 		}
 
 		String username = request.getParameter("username");
-		String foodOrder = request.getParameter("foodOrder");
-		String orderPickupLocation = request.getParameter("orderPickupLocation");
-		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
+        //begin different sections that affect the user and the delivery person
 
+        //method 1: complete order for user
+        //method 2: complete order for deliveryperson
+
+        if (MyServer.CustomerOrder.containsKey(username) || MyServer.DeliveredBy.containsKey(username)){
+            if (MyServer.CustomerOrder.get(username).equals(username)){
+
+            }
+            if (MyServer.DeliveredBy.get(username).equals(username)){
+
+            }
+        }
 
 		//section for ordercheck and hashmap placement
 		if (!MyServer.CustomerOrder.containsKey(username)){
 			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 	
-		MyServer.CustomerOrder.remove(username, foodOrder);
+		MyServer.CustomerOrder.remove(username);
 
-		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
+		return new ResponseEntity("{\"message\":\"Error\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
 	}
 	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
@@ -272,6 +294,14 @@ public class UserController {
 		} catch (final SignatureException e) {
 			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
+
+		//section for ordercheck and hashmap placement
+		if (!MyServer.CustomerOrder.containsKey(username)){
+			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+        System.out.println( MyServer.CustomerOrder.keySet());
+        MyServer.CustomerOrder.remove(username);
+
 
 
 		try {
@@ -305,9 +335,10 @@ public class UserController {
 		responseHeaders.set("Content-Type", "application/json");
 
 		String username = request.getParameter("username");
+        String recipient = request.getParameter("recipient");
 		String order = request.getParameter("foodOrder");
+        String workstatus = request.getParameter("working");
 		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
-
 
 		String token;
 		try {
@@ -320,6 +351,18 @@ public class UserController {
 		} catch (final SignatureException e) {
 			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
+		//check if working
+		if (Integer.parseInt(workstatus) == 0) {
+			return new ResponseEntity("{\"message\":\"You aren't working at the moment" +
+					". Activate your work status.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		//section for ordercheck and hashmap placement
+		if (MyServer.DeliveredBy.containsKey(username)){
+			return new ResponseEntity("{\"message\":\"You already have an active order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		MyServer.DeliveredBy.put(username, recipient);
 
 		try {
 			Class.forName(JDBC_DRIVER);
@@ -349,6 +392,7 @@ public class UserController {
 
 		}
 
+
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
 
 
@@ -358,13 +402,13 @@ public class UserController {
 	@RequestMapping(value = "/worktime", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> worktime(HttpServletRequest request) {
 		String workStatus = request.getParameter("working");
+        String username = request.getParameter("username");
 
-		HttpHeaders responseHeaders = new HttpHeaders();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
-		String username = request.getParameter("username");
 
-		String updateSql = "UPDATE Users\n" +
-				"SET is_working = '?'" + "WHERE username = '" + username + "';";
+		String updateSql = "UPDATE Users SET is_working = ?" + "WHERE username = '" + username + "';";
 
 
 		String token;
@@ -393,11 +437,8 @@ public class UserController {
 			e.printStackTrace();
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-		if (workStatus.equals("0")){
+		if (Integer.parseInt(workStatus) == 0){
 			return new ResponseEntity("{\"message\":\"You are not working anymore.\"}", responseHeaders, HttpStatus.OK);}
-
-
-
 		return new ResponseEntity("{\"message\":\"You are working now.\"}", responseHeaders, HttpStatus.OK);
 
 
