@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
     Button placeButton;
     TextView orderLabel;
-    TextView orderText;
+    EditText orderText;
     EditText pickUpLocationText;
     String token = null;
 
@@ -104,9 +106,20 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         client = new AsyncHttpClient();
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
         List cookies = cookieStore.getCookies();
+//        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
         System.out.println(cookies.get(0));
         System.out.println("FUCK");
         System.out.println(cookies.get(0).getClass().getName());
+
+        String cookieName = "";
+        String cookieValue = "";
+        List<Cookie> cook = cookieStore.getCookies();
+        for (Cookie c : cook) {
+            cookieName = c.getName().toString();
+            cookieValue = c.getValue().toString();
+            System.out.println(cookieName);
+            System.out.println(cookieValue);
+        }
 
 //        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
 //
