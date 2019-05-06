@@ -64,6 +64,7 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
                     // open up the new fragment that replaces the profile screen
                     Toast.makeText(getActivity().getApplicationContext(),"Log out is clicked",Toast.LENGTH_SHORT).show();
 
+
                 }
             }
         });
