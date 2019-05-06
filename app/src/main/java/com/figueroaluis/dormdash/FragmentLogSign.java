@@ -8,10 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//things for loopj/asynch http requests
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
+
+//things for loopj/asynch http requests
 
 
 //begin asynch task library
@@ -53,7 +54,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     AppCompatButton logInButton;
 
     Button acceptButton, logoutButton;
-    SwitchCompat workSwitch;
+    Switch workSwitch;
 
     private SharedPreferences mSharedPreferences;
     private String Name,Password;

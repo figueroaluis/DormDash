@@ -29,12 +29,20 @@ public class MenuItemAdapter extends BaseAdapter implements Filterable {
     private ArrayList<MenuItem> coolerMenuItems;
     private ArrayList<MenuItem> filteredMenuItems;
 
+    private ArrayList<String> selectedItemNames;
+    private String itemsToString;
+
     public MenuItemAdapter(Context mContext, ArrayList<MenuItem> menuItemList) {
         this.mContext = mContext;
         this.menuItemList = menuItemList;
         this.originalListsForFilter = new ArrayList<>(menuItemList);
 
+        this.selectedItemNames = new ArrayList<>();
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public ArrayList<String> getSelectedItemNames(){
+        return selectedItemNames;
     }
 
     @Override
@@ -86,6 +94,8 @@ public class MenuItemAdapter extends BaseAdapter implements Filterable {
                 if(((CheckBox) view).isChecked()){
                     MenuItem selectedItem = (MenuItem) getItem(position);
                     Toast.makeText(mContext,selectedItem.foodName,Toast.LENGTH_SHORT).show();
+                    selectedItemNames.add(selectedItem.getFoodName());
+                    itemsToString = itemsArrayToString(selectedItemNames);
                 }
             }
         });
@@ -130,5 +140,27 @@ public class MenuItemAdapter extends BaseAdapter implements Filterable {
         public CheckBox checkBox;
         public TextView menuItemName;
         public TextView menuItemType;
+    }
+
+    public void printItems(ArrayList<String> items){
+        for(int i = 0; i < items.size(); i++){
+            if(i==items.size()-1){
+                System.out.println(items.get(i));
+            }else{
+                System.out.println(items.get(i) + ", ");
+            }
+        }
+    }
+
+    public String itemsArrayToString(ArrayList<String> items){
+        String itemsString = "";
+        for(int i = 0; i < items.size(); i++){
+            if(i==items.size()-1){
+                itemsString+=items.get(i);
+            }else{
+                itemsString+=items.get(i)+", ";
+            }
+        }
+        return itemsString;
     }
 }

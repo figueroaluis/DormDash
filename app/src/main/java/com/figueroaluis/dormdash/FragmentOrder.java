@@ -23,7 +23,8 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
 
     Button placeButton;
-    EditText orderText;
+    TextView orderLabel;
+    TextView orderText;
     EditText pickUpLocationText;
     String token = null;
 
@@ -32,8 +33,9 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     public void onClick(View view) {
         if(view.getId() == R.id.button_placeButton){
 
-            orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
-            pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
+            orderLabel = view.findViewById(R.id.order_label);
+            orderText = view.findViewById(R.id.editText_enterOrder);
+            pickUpLocationText = view.findViewById(R.id.editText_pickUpLocation) ;
 
             AsyncHttpClient client = new AsyncHttpClient();
             final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
@@ -95,10 +97,18 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         placeButton = (Button) view.findViewById(R.id.button_placeButton);
         placeButton.setOnClickListener(this);
 
-        orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
+        orderText = view.findViewById(R.id.editText_enterOrder);
+        orderLabel = view.findViewById(R.id.order_label);
+
+
+        // load from cookie
+        // put it into the text view
 
 
         return view;
 
     }
+
+
+
 }
