@@ -21,6 +21,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.cookie.Cookie;
 
+import org.json.*;
 public class FragmentAcceptOrders extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
 
@@ -83,12 +84,55 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        //begin async thing
+        client = new AsyncHttpClient();
+
+
+        RequestParams params = new RequestParams();
+
+
+        client.get("http://10.0.2.2:80/feed", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                // called before request is started
+                System.out.println("Begin Feed Retrieval");
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                //Test out the response with this
+                System.out.println("Feed Pulled");
+                String s = new String(responseBody);
+                try {
+                    JSONObject jsonObj = new JSONObject(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                
+
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                System.out.println("Feed Failed");
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+
+
+
         // inflate the layout
         View view = inflater.inflate(R.layout.fragment_accept_orders, container, false);
-
-
         acceptButton = (Button) view.findViewById(R.id.button_accept);
         acceptButton.setOnClickListener(this);
+
 
 
         return view;
