@@ -1,5 +1,6 @@
 package com.figueroaluis.dormdash;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,26 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.cookie.Cookie;
-
-import org.json.*;
 public class FragmentAcceptOrders extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
 
 
     Button acceptButton;
     String token = null;
+
+    private ListView mListView;
+    private Context mContext;
+    private MenuItemAdapter menuItemAdapter;
+    private ArrayList<MenuItem> menuItemsList;
 
 
     @Override
@@ -84,10 +91,23 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // inflate the layout
+        View view = inflater.inflate(R.layout.fragment_accept_orders, container, false);
 
         //begin async thing
         client = new AsyncHttpClient();
 
+        mContext = getContext();
+        menuItemsList = new ArrayList<>();
+        menuItemsList.add(new MenuItem("Omelett","Breakfast"));
+        menuItemsList.add(new MenuItem("Chef's Corner Sunday Brunch","Brunch"));
+        menuItemsList.add(new MenuItem("Grill Breakfast","Breakfast"));
+        menuItemsList.add(new MenuItem("Waffle Station","Breakfast"));
+        menuItemsList.add(new MenuItem("Cereal","Breakfast"));
+        menuItemsList.add(new MenuItem("Salad Bar","Lunch/Dinner"));
+        menuItemsList.add(new MenuItem("Spaghetti","Dinner"));
+        menuItemsList.add(new MenuItem("Taco Bar","Dinner"));
+        menuItemsList.add(new MenuItem("Burger Bar","Dinner"));
 
         RequestParams params = new RequestParams();
 
@@ -128,11 +148,13 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
 
 
 
-        // inflate the layout
-        View view = inflater.inflate(R.layout.fragment_accept_orders, container, false);
+
         acceptButton = (Button) view.findViewById(R.id.button_accept);
         acceptButton.setOnClickListener(this);
 
+        menuItemAdapter = new MenuItemAdapter(mContext, menuItemsList);
+        mListView = view.findViewById(R.id.orders_list);
+        mListView.setAdapter(menuItemAdapter);
 
 
         return view;
