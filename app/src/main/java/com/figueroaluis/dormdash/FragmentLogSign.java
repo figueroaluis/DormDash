@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
@@ -183,13 +184,26 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         String s = new String(responseBody);
                         String token = headers[0].getValue();
                         System.out.println(s);
-                        System.out.println(token);
+                        System.out.println("TOKEN HERE: " + token);
+
+                        final SharedPreferences.Editor mEditor1 = mSharedPreferences.edit();
+                        mEditor1.putString(PREF_NAME, usernameEditText.getText().toString());
+                        mEditor1.putString(PREF_PASSWD, passwordEditText.getText().toString());
 
                         BasicClientCookie bccookie = new BasicClientCookie("token", token);
                         bccookie.setVersion(1); //version of cookie protocol, depends on what protocol it follows --> 0 for Netscape, 1 for RFC 2109
-                        bccookie.setDomain(""); //domain in which cookie should be presented
-                        bccookie.setPath("/"); //path to which client returns cookie
+//                        bccookie.setDomain(""); //domain in which cookie should be presented
+//                        bccookie.setPath("/"); //path to which client returns cookie
                         bccookie.setComment("Login Cookie"); //comment about purpose of cookie
+
+
+                        mEditor1.putString(PREF_SKIP_LOGIN, "skip");
+                        mEditor1.commit();
+
+                        FragmentHome fragh = new FragmentHome();
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, fragh, "Find this fragment")
+                                .addToBackStack(null).commit();
 
                     }
 
@@ -456,7 +470,8 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                             } else {
 
-                                Toast.makeText(getActivity().getApplicationContext(), "Invalid Username or Password", Toast.LENGTH_SHORT).show();
+                                onSignUpClicked(view);
+                                //Toast.makeText(getActivity().getApplicationContext(), "Invalid Username or Password", Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
@@ -466,7 +481,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         }
 
 
-                        onSignUpClicked(view);
+                        //onSignUpClicked(view);
 
 
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -24,6 +25,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     Button placeButton;
     EditText orderText;
     EditText pickUpLocationText;
+    String token = null;
 
 
     @Override
@@ -37,11 +39,13 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
             final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
             client.setCookieStore(myCookieStore);
 
+
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
             params.put("foodOrder", orderText.getText().toString());
             params.put("orderPickupLocation", pickUpLocationText.getText().toString());
             //put drop off location
+
 
             client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
 
@@ -82,6 +86,9 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the layout
+
+
+
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
 
