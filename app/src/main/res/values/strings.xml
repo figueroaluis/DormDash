@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">DormDash</string>
+    
+    <string-array name="pickuplocations">
+        <item>Berkus Hall</item>
+        <item>Braun Hall</item>
+        <item>Norris Hall</item>
+        <item>Stearns Hall</item>
+        <item>Stewart_Cleland Hall</item>
+        <item>Pauley Hall</item>
+        <item>Bell-Young Hall</item>
+        <item>Erdman Hall</item>
+        <item>Wylie Hall</item>
+        <item>Newcomb Hall</item>
+        <item>Chilcott Hall</item>
+        <item>Haines Hall</item>
+    </string-array>
+
+    <string-array name="dropofflocations">
+        <item>Marketplace</item>
+        <item>Tiger Cooler</item>
+        <item>Green Bean</item>
+        <item>Coffee Cart</item>
+    </string-array>
 </resources>

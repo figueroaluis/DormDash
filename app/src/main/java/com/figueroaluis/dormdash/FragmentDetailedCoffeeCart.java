@@ -31,21 +31,19 @@ public class FragmentDetailedCoffeeCart extends Fragment implements View.OnClick
         ccMenuItemsList = new ArrayList<>();
 
         // dummy data for menu items in the marketplace
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-        ccMenuItemsList.add(new MenuItem("Very Expensive PB&J","Four Leaf Cafe"));
-
+        ccMenuItemsList.add(new MenuItem("Salad","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("PB&J","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("Jamaican Jerk Sandwich","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("Mac n Cheese","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("Pasta","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("Fruit Salad","Four Leaf Cafe"));
+        ccMenuItemsList.add(new MenuItem("Cup Noodles",""));
+        ccMenuItemsList.add(new MenuItem("Hot Chocolate","Drink"));
+        ccMenuItemsList.add(new MenuItem("Coffee","Drink"));
+        ccMenuItemsList.add(new MenuItem("Tea","Drink"));
+        ccMenuItemsList.add(new MenuItem("Chips","Snack"));
+        ccMenuItemsList.add(new MenuItem("Donuts","Snack"));
+        ccMenuItemsList.add(new MenuItem("Pretzels","Snack"));
 
         menuItemAdapter = new MenuItemAdapter(mContext, ccMenuItemsList);
         mListView = view.findViewById(R.id.coffeecart_menu_items_listview);
