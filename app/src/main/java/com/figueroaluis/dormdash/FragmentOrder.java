@@ -17,9 +17,14 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 public class FragmentOrder extends Fragment implements View.OnClickListener  {
+    private AsyncHttpClient client;
+
 
 
     Button placeButton;
@@ -35,16 +40,17 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
             orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
             pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
 
-            AsyncHttpClient client = new AsyncHttpClient();
-            final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
-            client.setCookieStore(myCookieStore);
-
-
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
             params.put("foodOrder", orderText.getText().toString());
             params.put("orderPickupLocation", pickUpLocationText.getText().toString());
             //put drop off location
+            /** CORRECT **/
+            client = new AsyncHttpClient();
+            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+            List cookies = cookieStore.getCookies();
+            System.out.println("COOKIE SHIT" + cookies.get(0));
+
 
 
             client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
@@ -85,9 +91,8 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         // inflate the layout
-
-
 
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
@@ -96,6 +101,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         placeButton.setOnClickListener(this);
 
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
+        pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
 
 
         return view;

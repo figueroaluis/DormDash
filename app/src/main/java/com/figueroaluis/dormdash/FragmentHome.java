@@ -10,7 +10,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import cz.msebera.android.httpclient.client.CookieStore;
+import okhttp3.Cookie;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.PersistentCookieStore;
+
+import java.util.List;
+
 public class FragmentHome extends Fragment implements View.OnClickListener {
+    private AsyncHttpClient client;
+
 
     Button marketplaceButton;
     Button coolerButton;
@@ -80,9 +90,19 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        client = new AsyncHttpClient();
+
+        /**EXAMPLE
+//        PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+//        List cookies = cookieStore.getCookies();
+//        System.out.println("COOKIE SHIT" + cookies.get(0));
+         **/
+
+
+
+
         // inflate the layout
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         marketplaceButton = view.findViewById(R.id.marketplace_button);
         marketplaceButton.setOnClickListener(this);
         coolerButton = view.findViewById(R.id.cooler_button);
