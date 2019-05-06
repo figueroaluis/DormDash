@@ -12,14 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
 
 public class FragmentOrder extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
@@ -107,7 +105,21 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         client = new AsyncHttpClient();
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
         List cookies = cookieStore.getCookies();
-        System.out.println("COOKIE SHIT" + cookies.get(0));
+//        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
+        System.out.println(cookies.get(0));
+        System.out.println("FUCK");
+        System.out.println(cookies.get(0).getClass().getName());
+
+        String cookieName = "";
+        String cookieValue = "";
+        List<Cookie> cook = cookieStore.getCookies();
+        for (Cookie c : cook) {
+            cookieName = c.getName().toString();
+            cookieValue = c.getValue().toString();
+            System.out.println(cookieName);
+            System.out.println(cookieValue);
+        }
+
 //        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
 //
 //        String target = cookies.get(0);
@@ -115,9 +127,6 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         // inflate the layout
 
         View view = inflater.inflate(R.layout.fragment_order, container, false);
-
-
-
 
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
         pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
