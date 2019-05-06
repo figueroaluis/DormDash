@@ -24,7 +24,8 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
 
     Button placeButton;
-    EditText orderText;
+    TextView orderLabel;
+    TextView orderText;
     EditText pickUpLocationText;
     String token = null;
 
@@ -129,4 +130,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         return view;
 
     }
+
+
+
 }

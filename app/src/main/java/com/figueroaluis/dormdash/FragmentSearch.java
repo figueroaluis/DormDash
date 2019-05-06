@@ -61,18 +61,6 @@ public class FragmentSearch extends Fragment {
         mListView = view.findViewById(R.id.search_fragment_list_view);
         mListView.setAdapter(menuItemAdapter);
 
-//        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                menuItemAdapter.getFilter().filter(s);
-//                return false;
-//            }
-//        });
 
 
         return view;

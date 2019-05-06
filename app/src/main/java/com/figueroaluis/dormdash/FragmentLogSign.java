@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,8 +25,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//things for loopj/asynch http requests
-import com.loopj.android.http.*;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,8 +36,9 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
+
+//things for loopj/asynch http requests
 
 
 //begin asynch task library
