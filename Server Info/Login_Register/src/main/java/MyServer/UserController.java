@@ -273,15 +273,15 @@ public class UserController {
 		return new ResponseEntity("{\"message\":\"Error\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
 	}
-	@RequestMapping(value = "/cancelorder", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/cancelorder", method = RequestMethod.POST)
 	public ResponseEntity<String> cancelorder(@RequestBody String body, HttpServletRequest request) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 		String username = request.getParameter("username");
 		String order = request.getParameter("foodOrder");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
-		String insertSql = "DELETE FROM orders WHERE username = '" + username + "' AND foodOrder = '" + order + "';";
+		String selectUsername = "SELECT username FROM users WHERE username = ?;";
+		String insertSql = "DELETE FROM orders WHERE username = ?" + " AND foodOrder = ?;";
 		String token;
 
 		try {
@@ -296,10 +296,14 @@ public class UserController {
 		}
 
 		//section for ordercheck and hashmap placement
-		if (!MyServer.CustomerOrder.containsKey(username)){
+        System.out.println("This is the keyset" + MyServer.CustomerOrder.keySet());
+        System.out.println(username);
+        System.out.println(order);
+
+        System.out.println(!MyServer.CustomerOrder.containsKey(username));
+        if (!MyServer.CustomerOrder.containsKey(username)){
 			return new ResponseEntity("{\"message\":\"You don't have an order?\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-        System.out.println( MyServer.CustomerOrder.keySet());
         MyServer.CustomerOrder.remove(username);
 
 
@@ -310,10 +314,13 @@ public class UserController {
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
+            ps.setString(1, username);
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
 			//put on database
 			ps = conn.prepareStatement(insertSql);
+            ps.setString(1, username);
+            ps.setString(2, order);
 			ps.executeUpdate();
 		} catch(ClassNotFoundException cne) {
 			System.out.println("Class Not Found Exception");
@@ -336,9 +343,9 @@ public class UserController {
 
 		String username = request.getParameter("username");
         String recipient = request.getParameter("recipient");
-		String order = request.getParameter("foodOrder");
+		String order = request.getParameter("orderID");
         String workstatus = request.getParameter("working");
-		String selectUsername = "SELECT orderID FROM orders WHERE foodOrder = '" + order + "';";
+		String selectUsername = "SELECT username FROM orders WHERE orderID = ?;";
 
 		String token;
 		try {
@@ -351,6 +358,8 @@ public class UserController {
 		} catch (final SignatureException e) {
 			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
+
+
 		//check if working
 		if (Integer.parseInt(workstatus) == 0) {
 			return new ResponseEntity("{\"message\":\"You aren't working at the moment" +
@@ -364,33 +373,7 @@ public class UserController {
 
 		MyServer.DeliveredBy.put(username, recipient);
 
-		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			//get correct username
-			ps = conn.prepareStatement(selectUsername);
-			System.out.println(selectUsername);
-			ResultSet rs = ps.executeQuery();
-			System.out.println("here");
-			int id = 0;
-			if(rs.next()){
-				id = rs.getInt("orderID");
-			}
-			System.out.println(id);
-			String insertSql = "UPDATE users SET orderAccepted = " + id + " WHERE username = '" + username + "';";
-			//put on database
-			ps = conn.prepareStatement(insertSql);
-			ps.executeUpdate();
-
-		} catch(ClassNotFoundException cne) {
-			System.out.println("Class Not Found Exception");
-		} catch (SQLException se) {
-			System.out.println("SQL Exception");
-
-		} catch(Exception e) {
-			System.out.println("Oops there was an error");
-
-		}
+		
 
 
 		return new ResponseEntity("{\"message\":\"order accepted\"}", responseHeaders, HttpStatus.OK);
