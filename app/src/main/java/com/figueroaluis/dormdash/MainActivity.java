@@ -1,6 +1,7 @@
 package com.figueroaluis.dormdash;
 
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,10 @@ import android.util.Log;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestParams;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -21,7 +26,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,8 +40,11 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationItem searchButton_navBar;
     AHBottomNavigationItem ordersButton_navBar;
     AHBottomNavigationItem profile_navBar;
+    SharedPreferences mSharedPreferences;
 
-    boolean switchMode;
+    private boolean switchMode;
+    private AsyncHttpClient client;
+    private boolean status;
 
     @Subscribe
     public void onEvent(FragmentProfile.switchBoolean event){
@@ -66,19 +77,69 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setForceTint(true);
         bottomNavigation.setOnTabSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentHome()).commit();
-
-
     }
-
 
     private AHBottomNavigation.OnTabSelectedListener navListener =
             new AHBottomNavigation.OnTabSelectedListener() {
                 @Override
                 public boolean onTabSelected(int position, boolean wasSelected) {
+
+
+                    //begin async thing
+                    client = new AsyncHttpClient();
+                    PersistentCookieStore cookieStore = new PersistentCookieStore(getApplicationContext());
+                    //grab creds from cookies
+                    String cookieUser = "";
+
+                    List<Cookie> cook = cookieStore.getCookies();
+                    for (Cookie c : cook) {
+                        if (c.getName().equals("name")){
+//                        cookieUser = c.getName().toString();
+                        cookieUser = c.getValue();
+                        System.out.println(cookieUser);
+                        }
+                    }
+
+                    RequestParams params = new RequestParams();
+                    params.add("username", cookieUser);
+
+                    client.post("http://10.0.2.2:80/status", params, new AsyncHttpResponseHandler() {
+                        //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onStart() {
+                            // called before request is started
+                            System.out.println("STARTED Log in button");
+
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            //Test out the response with this
+                            System.out.println("ONSUCCESS log in");
+                            String s = new String(responseBody);
+                            System.out.println(s);
+                            if (s.equals("y")) switchMode = true;
+                            else switchMode = false;
+
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            System.out.println("failure log in");
+                        }
+
+                        @Override
+                        public void onRetry(int retryNo) {
+                            // called when request is retried
+                        }
+                    });
+
                     // position tells you which tab was selected
                     // wasSelected tells you if the tab is currently selected
                     System.out.println(position);
                     System.out.println(wasSelected);
+                    System.out.println("This is the boolean for switch mode in MainAcvity: " + switchMode);
                     Fragment selectedFragment = null;
                     if(position==0) {
                         selectedFragment = new FragmentHome();
@@ -146,5 +207,7 @@ public class MainActivity extends AppCompatActivity {
         // unregister the event
         EventBus.getDefault().unregister(this);
     }
+
+
 }
 

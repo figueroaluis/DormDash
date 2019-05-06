@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 
 public class FragmentProfile extends Fragment implements View.OnClickListener {
@@ -32,7 +30,7 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
     private Switch newSwitch;
 
 
-    public class switchBoolean{
+    public static class switchBoolean{
         private boolean workerModeOn;
         private String successMessage;
 
@@ -59,8 +57,24 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
 
         mContext = getContext();
 
-        newSwitch = view.findViewById(R.id.profile_option_icon);
-        EventBus.getDefault().post(new switchBoolean(newSwitch.isChecked(), "Success"));
+        newSwitch = (Switch) view.findViewById(R.id.profile_option_icon);
+        System.out.println("This is the value in the profile page 1: " + newSwitch.isChecked());
+
+        System.out.println(newSwitch);
+
+
+//        newSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                if(isChecked){
+//                    Toast.makeText(getActivity().getApplicationContext(),"switch works",Toast.LENGTH_SHORT).show();
+//                    EventBus.getDefault().post(new switchBoolean(newSwitch.isChecked(),"Success"));
+//                }else{
+//                    Toast.makeText(getActivity().getApplicationContext(),"switch no works",Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        });
 
         optionItemNames = new ArrayList<>();
         optionItemList = new ArrayList<>();

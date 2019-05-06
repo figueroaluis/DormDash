@@ -29,6 +29,8 @@ import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -64,6 +66,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     public static final String PREF_NAME = "name";
     public static final String PREF_PASSWD = "passwd";
     public static final String PREF_SKIP_LOGIN = "skip_login";
+    public static final String SWITCH_BOOLEAN = "switch";
 
     private ListView mListView;
     private Context mContext;
@@ -184,7 +187,9 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         //Test out the response with this
                         System.out.println("ONSUCCESS log in");
                         String s = new String(responseBody);
-                        String token = headers[0].getValue();
+//                        String token = headers[0].getValue();
+                        String token = "dfsdfdsdfsdfsdfsdfdsf";
+
 
                        /** CORRECT **/
                         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
@@ -279,6 +284,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         mSharedPreferences = this.getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
         final SharedPreferences.Editor mEditor = mSharedPreferences.edit();
 
+
         if(mSharedPreferences.contains(PREF_SKIP_LOGIN)) {
 
             System.out.println("Recognized User");
@@ -296,7 +302,6 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             workSwitch = v.findViewById(R.id.profile_option_icon);
             usernameProfileTextView = v.findViewById(R.id.profile_username_textview);
             customerType = v.findViewById(R.id.profile_usertype_textview);
-            customerType.setText("Client");
 
 
             final String username = mSharedPreferences.getString(PREF_NAME, null);
@@ -314,6 +319,13 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             userImage = v.findViewById(R.id.profile_user_imageview);
             Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
 
+            workSwitch.setChecked(mSharedPreferences.getBoolean(SWITCH_BOOLEAN,workSwitch.isChecked()));
+            if(workSwitch.isChecked()){
+                customerType.setText("Worker");
+            }else{
+                customerType.setText("Client");
+            }
+
             workSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -322,10 +334,23 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
                     client1.setCookieStore(myCookieStore);
 
+
+
+
+
                     RequestParams params = new RequestParams();
                     params.put("username", usernameProfileTextView.getText());
                     params.put("working", "0");
+
                     System.out.println(usernameProfileTextView.getText());
+                    System.out.println("This is the one I was looking for: " + workSwitch.isChecked());
+                    mEditor.putBoolean(SWITCH_BOOLEAN,workSwitch.isChecked());
+                    mEditor.commit();
+
+                    System.out.println("This is coming from sharedpref: " + mSharedPreferences.getBoolean(SWITCH_BOOLEAN,workSwitch.isChecked()));
+
+
+                    EventBus.getDefault().post(new FragmentProfile.switchBoolean(mSharedPreferences.getBoolean(SWITCH_BOOLEAN,workSwitch.isChecked()),"Success"));
 
                     client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
                         @Override
@@ -539,6 +564,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
         return !(Name.isEmpty() || Password.isEmpty());
 
     }
+
 
 
 }
