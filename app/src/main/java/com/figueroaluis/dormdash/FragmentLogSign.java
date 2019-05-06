@@ -2,6 +2,7 @@ package com.figueroaluis.dormdash;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +11,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -203,10 +203,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         mEditor1.putString(PREF_SKIP_LOGIN, "skip");
                         mEditor1.commit();
 
+//                        System.out.println("HERE BEFORE");
+
                         FragmentHome fragh = new FragmentHome();
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, fragh, "Find this fragment")
                                 .addToBackStack(null).commit();
+
+//                        System.out.println("HERE AFTER");
 
                     }
 

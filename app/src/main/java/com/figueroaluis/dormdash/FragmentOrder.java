@@ -1,5 +1,6 @@
 package com.figueroaluis.dormdash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,15 +40,30 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     public void onClick(View view) {
         if(view.getId() == R.id.button_placeButton){
 
-            orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
-            pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
+            //orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
+            //pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
 
+
+            /** CORRECT **/
+            client = new AsyncHttpClient();
+            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+            List cookies = cookieStore.getCookies();
+            System.out.println("COOKIE SHIT" + cookies.get(0));
+            String str = cookies.get(0).toString();
+            System.out.println(str);
 
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
-            params.put("foodOrder", orderText.getText().toString());
-            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
+            params.put("foodOrder", orderText.getText().toString().trim());
+            params.put("orderPickupLocation", pickUpLocationText.getText().toString().trim());
             //put drop off location
+//            /** CORRECT **/
+//            client = new AsyncHttpClient();
+//            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+//            List cookies = cookieStore.getCookies();
+//            System.out.println("COOKIE SHIT" + cookies.get(0));
+//            String str = cookies.get(0).toString();
+//            System.out.println(str);
 
 
 
@@ -95,20 +111,23 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
         List cookies = cookieStore.getCookies();
         System.out.println("COOKIE SHIT" + cookies.get(0));
-        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
-
-        String target = cookies.get(0);
+//        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
+//
+//        String target = cookies.get(0);
 
         // inflate the layout
 
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
 
-        placeButton = (Button) view.findViewById(R.id.button_placeButton);
-        placeButton.setOnClickListener(this);
+
 
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
         pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
+
+        placeButton = (Button) view.findViewById(R.id.button_placeButton);
+        placeButton.setOnClickListener(this);
+
 
 
         return view;

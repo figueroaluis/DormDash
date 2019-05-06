@@ -92,11 +92,11 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         client = new AsyncHttpClient();
 
-        /**EXAMPLE
+
 //        PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
 //        List cookies = cookieStore.getCookies();
 //        System.out.println("COOKIE SHIT" + cookies.get(0));
-         **/
+
 
 
 
@@ -111,6 +111,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
         greenbeanButton.setOnClickListener(this);
         coffeecartButton = view.findViewById(R.id.coffeecart_button);
         coffeecartButton.setOnClickListener(this);
+
 
         return view;
     }
