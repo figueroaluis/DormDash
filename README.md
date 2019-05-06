@@ -32,6 +32,8 @@ Like any ambitious developer, we wanted to implement many more features than the
 Below, we list a couple of features that we have planned to complete in the near future:
 * Confirm delivery
   * This is perhaps the next most important feature to include, since we want to keep track of what orders have keep completed.
+* Finish android implementation of acceptOrder API call
+  * We created the acceptOrder endpoint and currently have a list of orders with checkboxes on the Android side
 * Venmo payment option
   * Option to tip the worker
 * Maps to track location of Worker and Client
