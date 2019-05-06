@@ -32,20 +32,21 @@ public class FragmentDetailedCooler extends Fragment implements View.OnClickList
         coolerMenuItemsList = new ArrayList<>();
 
         // dummy data for menu items in the marketplace
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
-        coolerMenuItemsList.add(new MenuItem("IMPOSSIBLE BURGER","Order"));
+        coolerMenuItemsList.add(new MenuItem("Burger","Order"));
+        coolerMenuItemsList.add(new MenuItem("Pizza by the Slice","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Pizza to Order","Order"));
+        coolerMenuItemsList.add(new MenuItem("Popcorn","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Protein Bar","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Starburst","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Twix","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Air Heads","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Slim Jim","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Chicken Sandwich","Order"));
+        coolerMenuItemsList.add(new MenuItem("Philly Cheesesteak","Order"));
+        coolerMenuItemsList.add(new MenuItem("Sushi","Order"));
+        coolerMenuItemsList.add(new MenuItem("Fruit to Go","Pick Up"));
+        coolerMenuItemsList.add(new MenuItem("Bagel","Order"));
+        coolerMenuItemsList.add(new MenuItem("Snack Mix","Pick"));
 
 
 

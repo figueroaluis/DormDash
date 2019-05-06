@@ -129,9 +129,6 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
-
-
-
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
         pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
 

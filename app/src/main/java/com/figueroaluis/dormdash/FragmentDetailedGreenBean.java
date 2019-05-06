@@ -27,21 +27,17 @@ public class FragmentDetailedGreenBean extends Fragment implements View.OnClickL
         greenBeanMenuItemsList = new ArrayList<>();
 
         // dummy data for menu items in the marketplace
-        greenBeanMenuItemsList.add(new MenuItem("Coffee","Hot"));
-        greenBeanMenuItemsList.add(new MenuItem("Very Tasty Coffee","Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Fucking Strong Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Meh Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Tasty Ass Juice","Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Coffee","Hot"));
-        greenBeanMenuItemsList.add(new MenuItem("Very Tasty Coffee","Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Fucking Strong Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Meh Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Tasty Ass Juice","Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Coffee","Hot"));
-        greenBeanMenuItemsList.add(new MenuItem("Very Tasty Coffee","Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Fucking Strong Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Meh Coffee","Hot/Cold"));
-        greenBeanMenuItemsList.add(new MenuItem("Tasty Ass Juice","Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Hot Coffee","Hot"));
+        greenBeanMenuItemsList.add(new MenuItem("Iced Coffee","Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Coffee with Espresso","Hot/Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Tea","Hot/Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Pastry","Snack"));
+        greenBeanMenuItemsList.add(new MenuItem("Izzy Soda","Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Hot Coffee","Hot"));
+        greenBeanMenuItemsList.add(new MenuItem("Iced Coffee","Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Coffee with Espresso","Hot/Cold"));
+        greenBeanMenuItemsList.add(new MenuItem("Pastry","Snack"));
+        greenBeanMenuItemsList.add(new MenuItem("Izzy Soda","Cold"));
 
         menuItemAdapter = new MenuItemAdapter(mContext, greenBeanMenuItemsList);
         mListView = view.findViewById(R.id.greenbean_menu_items_listview);
