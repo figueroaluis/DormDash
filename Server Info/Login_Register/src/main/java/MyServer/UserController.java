@@ -222,6 +222,7 @@ public class UserController {
             se.printStackTrace();
             return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
         }
+        
         if (MyServer.CustomerOrder.containsKey(order_id)){
             return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
