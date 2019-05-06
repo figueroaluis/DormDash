@@ -1,5 +1,6 @@
 package com.figueroaluis.dormdash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -102,6 +103,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
         pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
+
 
 
         return view;

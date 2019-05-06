@@ -112,6 +112,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
         coffeecartButton = view.findViewById(R.id.coffeecart_button);
         coffeecartButton.setOnClickListener(this);
 
+
         return view;
     }
 }
