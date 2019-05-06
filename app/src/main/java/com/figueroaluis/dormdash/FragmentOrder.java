@@ -38,19 +38,29 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     public void onClick(View view) {
         if(view.getId() == R.id.button_placeButton){
 
-            orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
-            pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
+            //orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
+            //pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
 
-            RequestParams params = new RequestParams();
-            params.put("username", "Sam");
-            params.put("foodOrder", orderText.getText().toString());
-            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
-            //put drop off location
             /** CORRECT **/
             client = new AsyncHttpClient();
             PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
             List cookies = cookieStore.getCookies();
             System.out.println("COOKIE SHIT" + cookies.get(0));
+            String str = cookies.get(0).toString();
+            System.out.println(str);
+
+            RequestParams params = new RequestParams();
+            params.put("username", "Sam");
+            params.put("foodOrder", orderText.getText().toString().trim());
+            params.put("orderPickupLocation", pickUpLocationText.getText().toString().trim());
+            //put drop off location
+//            /** CORRECT **/
+//            client = new AsyncHttpClient();
+//            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+//            List cookies = cookieStore.getCookies();
+//            System.out.println("COOKIE SHIT" + cookies.get(0));
+//            String str = cookies.get(0).toString();
+//            System.out.println(str);
 
 
 
@@ -98,11 +108,13 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
 
-        placeButton = (Button) view.findViewById(R.id.button_placeButton);
-        placeButton.setOnClickListener(this);
+
 
         orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
         pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation);
+
+        placeButton = (Button) view.findViewById(R.id.button_placeButton);
+        placeButton.setOnClickListener(this);
 
 
 
