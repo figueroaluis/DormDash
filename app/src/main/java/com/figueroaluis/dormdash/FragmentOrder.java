@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpHeaders;
+import cz.msebera.android.httpclient.HttpRequest;
 import cz.msebera.android.httpclient.cookie.Cookie;
 
 import java.lang.reflect.Array;
@@ -48,29 +50,44 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
 
 
             /** CORRECT **/
-
             client = new AsyncHttpClient();
             PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
 
             String cookieName = "";
             String cookieValue = "";
+            String cookieUser = "";
             List<Cookie> cook = cookieStore.getCookies();
             for (Cookie c : cook) {
-                cookieName = c.getName().toString();
-                cookieValue = c.getValue().toString();
+                if(c.getName().equals("token")) {
+                    cookieName = c.getName();
+                    cookieValue = c.getValue();
+//                    cookieUser = c.getDomain().toString();
+                } else{
+                    cookieUser = c.getValue();
+                }
+
+
+//                cookieName = c.getName().toString();
+//                cookieValue = c.getValue().toString();
+//                cookieUser = c.getDomain().toString();
+                System.out.println("here we are");
                 System.out.println(cookieName);
                 System.out.println(cookieValue);
+                System.out.println(cookieUser);
             }
 
+//            System.out.println("PICK UP LOCATION: " + pickUpLocation);
+//            System.out.println("DROP OFF LOCATION: " + dropOffLocation);
 
+            client.addHeader("Authorization", cookieValue);
             RequestParams params = new RequestParams();
-            params.put("username", "Sam");
+            params.put("username", cookieUser);
             params.put("foodOrder", orderText.getText().toString().trim());
 //            params.put("orderPickupLocation", pickUpLocationText.getText().toString().trim());
 //            params.put("orderDropoffLocation", dropOffLocationText.getText().toString().trim());
             params.put("orderPickupLocation", pickUpLocation);
             params.put("orderDropoffLocation", dropOffLocation);
-            params.put("Authorization", cookieValue);
+
             //put drop off location
 //            /** CORRECT **/
 //            client = new AsyncHttpClient();
@@ -85,34 +102,34 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
 
             client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
 
-                        @Override
-                        public void onStart() {
-                            // called before request is started
-                            System.out.println("STARTED order onStart");
+                @Override
+                public void onStart() {
+                    // called before request is started
+                    System.out.println("STARTED order onStart");
 
-                        }
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            //Test out the response with this
-                            System.out.println("ONSUCCESS orders");
-                            String s = new String(responseBody);
-                            System.out.println(s);
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    //Test out the response with this
+                    System.out.println("ONSUCCESS orders");
+                    String s = new String(responseBody);
+                    System.out.println(s);
 
 
-                        }
+                }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            System.out.println("failure sign up");
-                        }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    System.out.println("failure sign up");
+                }
 
-                        @Override
-                        public void onRetry(int retryNo) {
-                            System.out.println("Retrying...");
-                            // called when request is retried
-                        }
+                @Override
+                public void onRetry(int retryNo) {
+                    System.out.println("Retrying...");
+                    // called when request is retried
+                }
 
-                    });
+            });
 
             Toast.makeText(view.getContext(), "Placed Order", Toast.LENGTH_SHORT).show();
         }
@@ -124,6 +141,11 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
         /** CORRECT **/
         client = new AsyncHttpClient();
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+        List cookies = cookieStore.getCookies();
+//        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
+        System.out.println(cookies.get(0));
+        System.out.println(cookies.get(0).getClass().getName());
+
         String cookieName = "";
         String cookieValue = "";
         List<Cookie> cook = cookieStore.getCookies();
@@ -133,10 +155,10 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
             System.out.println(cookieName);
             System.out.println(cookieValue);
         }
-        List cookies = cookieStore.getCookies();
-//        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
-        System.out.println(cookies.get(0));
-        System.out.println(cookies.get(0).getClass().getName());
+
+//        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
+//
+//        String target = cookies.get(0);
 
         // inflate the layout
 
