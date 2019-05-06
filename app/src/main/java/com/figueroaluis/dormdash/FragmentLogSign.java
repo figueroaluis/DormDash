@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -44,13 +45,14 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     // check to see if we are in sign up or log in
     Boolean signUpMode = true;
     // buttons and textviews
-    TextView loginTextView;
+    TextView loginTextView, usernameProfileTextView, customerType;
     EditText usernameEditText;
     EditText passwordEditText;
     AppCompatButton signUpButton;
     AppCompatButton logInButton;
 
     Button acceptButton, logoutButton;
+    SwitchCompat workSwitch;
 
     private SharedPreferences mSharedPreferences;
     private String Name,Password;
@@ -66,6 +68,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     private ArrayList<String> optionItemNames;
     private ArrayList<ProfileOptionItem> optionItemList;
     private ImageView userImage;
+
 
     // go to profile page
     public void showProfilePage(){
@@ -270,6 +273,16 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             optionItemNames.add("About");
             optionItemNames.add("Log Out");
 
+            workSwitch = v.findViewById(R.id.profile_option_icon);
+            usernameProfileTextView = v.findViewById(R.id.profile_username_textview);
+            customerType = v.findViewById(R.id.profile_usertype_textview);
+            customerType.setText("Client");
+
+
+            final String username = mSharedPreferences.getString(PREF_NAME, null);
+            usernameProfileTextView.setText(username);
+
+
             for(int i = 0; i < optionItemNames.size(); i++){
                 optionItemList.add(new ProfileOptionItem(optionItemNames.get(i)));
             }
@@ -280,6 +293,95 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
             userImage = v.findViewById(R.id.profile_user_imageview);
             Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
+
+            workSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    AsyncHttpClient client1 = new AsyncHttpClient();
+                    final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
+                    client1.setCookieStore(myCookieStore);
+
+                    RequestParams params = new RequestParams();
+                    params.put("username", usernameProfileTextView.getText());
+                    params.put("working", "0");
+                    System.out.println(usernameProfileTextView.getText());
+
+                    client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                            System.out.println("ON SUCCESS as WORKER");
+                            String s = new String(responseBody);
+                            System.out.println(s);
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                            System.out.println("failure to send worktime data initially");
+
+                        }
+                    });
+
+
+                    if(workSwitch.isChecked()) {
+
+                        customerType.setText("Worker");
+
+                       // RequestParams params = new RequestParams();
+                        params.put("username", usernameProfileTextView.getText());
+                        params.put("working", "1");
+
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                                System.out.println("ON SUCCESS as WORKER");
+                                String s = new String(responseBody);
+                                System.out.println(s);
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                                System.out.println("failure to set worker");
+
+                            }
+                        });
+
+                    }
+
+                    else {
+                        customerType.setText("Client");
+
+                       // RequestParams params = new RequestParams();
+                        params.put("username", usernameProfileTextView.getText());
+                        params.put("working", "0");
+
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                                System.out.println("ON SUCCESS as CLIENT");
+                                String s = new String(responseBody);
+                                System.out.println(s);
+
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                                System.out.println("failure to set client");
+
+                            }
+                        });
+
+                    }
+                }
+            });
 
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -363,9 +465,9 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                         }
 
-                        System.out.println("BEFORE");
+
                         onSignUpClicked(view);
-                        System.out.println("AFTER");
+
 
 
                     }
