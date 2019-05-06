@@ -2,6 +2,7 @@ package MyServer;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.SignatureException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
@@ -432,10 +433,26 @@ public class UserController {
 			return new ResponseEntity("{\"message\":\"You are not working anymore.\"}", responseHeaders, HttpStatus.OK);}
 		return new ResponseEntity("{\"message\":\"You are working now.\"}", responseHeaders, HttpStatus.OK);
 
-
-
-
 	}
+
+    @RequestMapping(value = "/feed", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> feed(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+    }
+
+
+
 
 	//Helper method to convert bytes into hexadecimal
 	public static String bytesToHex(byte[] in) {
