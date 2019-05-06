@@ -10,7 +10,7 @@ For our project, we created an AWS server on which we ran a Virtual Machine with
 #### Connecting to the Server
 ```IP address: ec2-3-14-202-131.us-east-2.compute.amazonaws.com```
 ```Port Number: 80```
-```When you need to connect to the server, let us know and we'll start it```
+When you need to connect to the server, let us know and we'll start it
 
 (optional) ```chmod 400 dormdash.pem```
 
