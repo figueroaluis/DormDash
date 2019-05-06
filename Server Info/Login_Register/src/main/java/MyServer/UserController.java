@@ -21,7 +21,7 @@ public class UserController {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
-	static final String PASSWORD = "";
+	static final String PASSWORD = "D0rmdash!";
 	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	static Connection conn = null;
 	static PreparedStatement ps = null;
