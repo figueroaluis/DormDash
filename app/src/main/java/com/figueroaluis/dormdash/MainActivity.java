@@ -89,35 +89,46 @@ public class MainActivity extends AppCompatActivity {
                     client = new AsyncHttpClient();
                     PersistentCookieStore cookieStore = new PersistentCookieStore(getApplicationContext());
                     //grab creds from cookies
+                    String cookieName = "";
+                    String cookieToken = "";
                     String cookieUser = "";
-
                     List<Cookie> cook = cookieStore.getCookies();
                     for (Cookie c : cook) {
-                        if (c.getName().equals("name")){
-//                        cookieUser = c.getName().toString();
-                        cookieUser = c.getValue();
-                        System.out.println(cookieUser);
+                        if (c.getName().equals("token")) {
+                            cookieName = c.getName();
+                            cookieToken = c.getValue();
+//                    cookieUser = c.getDomain().toString();
+                        } else {
+                            cookieUser = c.getValue();
                         }
                     }
+                    System.out.print("The cookieuser is "+ cookieUser);
+                    System.out.print("The cookietokenis " + cookieToken);
+
 
                     RequestParams params = new RequestParams();
                     params.add("username", cookieUser);
+                    client.addHeader("Authorization", cookieToken);
+                    System.out.println("TOKEN IS" + cookieToken);
+                    System.out.println("USER IS" + cookieUser);
 
-                    client.post("http://10.0.2.2:80/status", params, new AsyncHttpResponseHandler() {
+
+                        client.post("http://10.0.2.2:80/status", params, new AsyncHttpResponseHandler() {
                         //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onStart() {
                             // called before request is started
-                            System.out.println("STARTED Log in button");
+                            System.out.println("Status");
 
                         }
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             //Test out the response with this
-                            System.out.println("ONSUCCESS log in");
+                            System.out.println("ONSUCCESS STATUS CHECK");
                             String s = new String(responseBody);
-                            System.out.println(s);
+
+                            System.out.println("THIS IS THE RESPONSE BODY" + s);
                             if (s.equals("y")) switchMode = true;
                             else switchMode = false;
 
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            System.out.println("failure log in");
+                            System.out.println("failure STATUS");
                         }
 
                         @Override

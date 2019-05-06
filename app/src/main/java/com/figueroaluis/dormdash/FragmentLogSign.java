@@ -32,8 +32,10 @@ import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -338,12 +340,18 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 @Override
                 public void onClick(View view) {
 
+                    PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+
+                    String cookieValue = "";
+                    List<Cookie> cook = cookieStore.getCookies();
+                    for (Cookie c : cook) {
+                        if (c.getName().equals("token")) {
+                            cookieValue = c.getValue();
+//                    cookieUser = c.getDomain().toString();
+                        }
+                    }
                     AsyncHttpClient client1 = new AsyncHttpClient();
-
-
-
-
-
+                    client1.addHeader("Authorization", cookieValue);
 
                     RequestParams params = new RequestParams();
                     params.put("username", usernameProfileTextView.getText());

@@ -449,8 +449,7 @@ public class UserController {
     @RequestMapping(value = "/status", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
     public ResponseEntity<String> status(HttpServletRequest request) {
 
-        String username = request.getParameter("username");
-
+        
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         int status = 0;
