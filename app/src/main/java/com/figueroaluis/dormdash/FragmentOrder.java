@@ -13,17 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.*;
 
-import java.net.HttpCookie;
-import java.util.Iterator;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 public class FragmentOrder extends Fragment implements View.OnClickListener  {
     private AsyncHttpClient client;
@@ -110,7 +103,10 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         client = new AsyncHttpClient();
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
         List cookies = cookieStore.getCookies();
-        System.out.println("COOKIE SHIT" + cookies.get(0));
+        System.out.println(cookies.get(0));
+        System.out.println("FUCK");
+        System.out.println(cookies.get(0).getClass().getName());
+
 //        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
 //
 //        String target = cookies.get(0);
