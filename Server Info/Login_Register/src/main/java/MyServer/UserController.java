@@ -127,7 +127,7 @@ public class UserController {
 					if (storedHashedKey.equals(hashedKey)) {
 
 						//We will sign our JWT with our ApiKey secret
-						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
+						String jws = Jwts.builder().setHeaderParam("typ", "JWT").setExpiration(new Date(System.currentTimeMillis() + 86400000)).setSubject(sessionGen.randomAlphaNumeric(10)).signWith(key).compact();
 						responseHeaders.set("Authorization", jws);
 //						MyServer.users.put(username, jws);
 						return new ResponseEntity("{\"message\":\"user logged in\"}", responseHeaders, HttpStatus.OK);
@@ -443,13 +443,13 @@ public class UserController {
         return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET) // <-- setup the endpoint URL at /hello with the HTTP POST method
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
-        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
-        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/logout", method = RequestMethod.DELETE) // <-- setup the endpoint URL at /hello with the HTTP POST method
+//    public ResponseEntity<String> logout(HttpServletRequest request) {
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        responseHeaders.set("Content-Type", "application/json");
+//        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);
+//        return new ResponseEntity(responseObj.toString(), responseHeaders, HttpStatus.OK);
+//    }
 
 
 

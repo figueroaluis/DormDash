@@ -28,15 +28,5 @@
         app:layout_constraintTop_toBottomOf="@+id/button_accept"
         tools:layout_editor_absoluteX="8dp" />
 
-    <Button
-        android:id="@+id/button_logout"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Log Out"
-        app:layout_constraintStart_toEndOf="@+id/button_accept"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

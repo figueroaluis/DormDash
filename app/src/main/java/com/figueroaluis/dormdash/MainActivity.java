@@ -1,6 +1,7 @@
 package com.figueroaluis.dormdash;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setForceTint(true);
         bottomNavigation.setOnTabSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentHome()).commit();
+
 
     }
 
