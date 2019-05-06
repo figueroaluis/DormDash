@@ -1,65 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/image_coffeecart"
+        android:layout_marginTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/coffee_cart_pic"
-        tools:layout_editor_absoluteX="0dp" />
+        app:srcCompat="@drawable/coffee_cart_pic" />
 
-    <TextView
-        android:id="@+id/coffeecarttitle_text"
+    <RelativeLayout
+        android:id="@+id/cc_text_container_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Coffee Cart"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/image_coffeecart"
-        tools:layout_editor_absoluteX="149dp" />
+        android:layout_alignBottom="@+id/image_coffeecart">
 
-    <TextView
-        android:id="@+id/coffeecarthours1_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sunday - Thursday: 7:30 pm - 1 am"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/coffeecarttitle_text"
-        tools:layout_editor_absoluteX="192dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/coffeecarthours2_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Closed on Holidays"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/coffeecarthours1_text"
-        tools:layout_editor_absoluteX="123dp" />
+            <TextView
+                android:id="@+id/coffeecarttitle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Coffee Cart"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/coffeecartprice_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Delivery Fee: $2.00"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/coffeecarthours2_text"
-        tools:layout_editor_absoluteX="119dp" />
+            <TextView
+                android:id="@+id/coffeecarthours1_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sunday - Thursday: 7:30 pm - 1 am"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/coffeecarthours2_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Closed on Holidays"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coffeecartprice_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delivery Fee: $2.00"
+                android:textStyle="bold"
+                android:textAlignment="center" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <ListView
-        android:id="@+id/coffeecartlist_text"
+        android:id="@+id/coffeecart_menu_items_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/coffeecartprice_text"
-        tools:layout_editor_absoluteX="8dp" />
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/cc_text_container_layout" />
+
+
+</LinearLayout>

@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".FragmentSearch">
 
-    <item android:id="@+id/search"
-        android:title="Search"
-        />
-
+    <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="Search"/>
 
 </menu>
