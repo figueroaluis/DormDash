@@ -10,7 +10,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.SwitchCompat;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
     AppCompatButton logInButton;
 
     Button acceptButton, logoutButton;
-    SwitchCompat workSwitch;
+    Switch workSwitch;
 
     private AsyncHttpClient client;
     private SharedPreferences mSharedPreferences;

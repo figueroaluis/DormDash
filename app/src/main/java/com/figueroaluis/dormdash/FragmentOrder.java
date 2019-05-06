@@ -17,6 +17,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
+import java.net.HttpCookie;
+import java.util.Iterator;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -40,16 +42,13 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
             orderText = (EditText) view.findViewById(R.id.editText_enterOrder);
             pickUpLocationText = (EditText) view.findViewById(R.id.editText_pickUpLocation) ;
 
+
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
             params.put("foodOrder", orderText.getText().toString());
             params.put("orderPickupLocation", pickUpLocationText.getText().toString());
             //put drop off location
-            /** CORRECT **/
-            client = new AsyncHttpClient();
-            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-            List cookies = cookieStore.getCookies();
-            System.out.println("COOKIE SHIT" + cookies.get(0));
+
 
 
 
@@ -91,6 +90,14 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        /** CORRECT **/
+        client = new AsyncHttpClient();
+        PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+        List cookies = cookieStore.getCookies();
+        System.out.println("COOKIE SHIT" + cookies.get(0));
+        HttpCookie httpCookie = HttpCookie.parse(cookies.get(0)).get(0);
+
+        String target = cookies.get(0);
 
         // inflate the layout
 
