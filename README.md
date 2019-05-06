@@ -12,7 +12,7 @@ For our project, we created an AWS server on which we ran a Virtual Machine with
 ```Port Number: 80```
 ```Password: D0rmdash!```
 
-When you need to connect to the server, let us know and we'll start it
+When you need to connect to the server, let us know and we'll start it!
 
 (optional) ```chmod 400 dormdash.pem```
 
@@ -28,7 +28,12 @@ Within our zip file, most of our classes can be found under DormDash/app/src/mai
 In order to use cancelOrder, you need username and orderID as parameters.
 
 ### Project Info:
+
+* We are uploading our git, the branch logsign2 is the most complete branch for our project.
+
 Initially we intended on webscraping the Marketplace and Coffee Cart websites to get menus for those tables. We created a working java file that scraped the websites, added the data to the database, and then pulled the data from the database to add to the website. We hoped this would work but we ran into a lot of issues along the way and ended up having to manually enter food data. It was difficult to account for every possible formatting of the website because there are different times and formatting used for each day.
+
+The acceptorder endpoint works really well and we have tested it thoroughly on a local mysql databases and aws. However, we really struggled to take current orders from the database and populate the list view on the accept orders fragment. Right now we set up a "dummy" list view to show what the app would look like if we were able to populate the list view with the right orders.
 
 ### Future Features
 Like any ambitious developer, we wanted to implement many more features than the ones we were able to get done.
