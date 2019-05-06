@@ -41,12 +41,12 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
 
 
             /** CORRECT **/
-            client = new AsyncHttpClient();
-            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-            List cookies = cookieStore.getCookies();
-            System.out.println("COOKIE SHIT" + cookies.get(0));
-            String str = cookies.get(0).toString();
-            System.out.println(str);
+//            client = new AsyncHttpClient();
+//            PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
+//            List cookies = cookieStore.getCookies();
+//            System.out.println("COOKIE SHIT" + cookies.get(0));
+//            String str = cookies.get(0).toString();
+//            System.out.println(str);
 
             RequestParams params = new RequestParams();
             params.put("username", "Sam");
@@ -105,12 +105,6 @@ public class FragmentOrder extends Fragment implements View.OnClickListener  {
         /** CORRECT **/
         client = new AsyncHttpClient();
         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
-        List cookies = cookieStore.getCookies();
-//        System.out.println("PARSE" + java.net.HttpCookie.parse(cookies.get(0).toString()));
-        System.out.println(cookies.get(0));
-        System.out.println("FUCK");
-        System.out.println(cookies.get(0).getClass().getName());
-
         String cookieName = "";
         String cookieValue = "";
         List<Cookie> cook = cookieStore.getCookies();

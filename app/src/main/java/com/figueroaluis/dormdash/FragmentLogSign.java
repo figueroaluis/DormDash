@@ -187,9 +187,11 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         //Test out the response with this
                         System.out.println("ONSUCCESS log in");
                         String s = new String(responseBody);
-                        String token = headers[0].getValue();
+//                        String token = headers[0].getValue();
+                        String token = "TEMPORARY";
 
-                       /** CORRECT **/
+
+                        /** CORRECT **/
                         PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
                         client.setCookieStore(cookieStore);
                         BasicClientCookie newCookie = new BasicClientCookie("token", token);
@@ -322,8 +324,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 public void onClick(View view) {
 
                     AsyncHttpClient client1 = new AsyncHttpClient();
-                    final PersistentCookieStore myCookieStore = new PersistentCookieStore(getActivity());
-                    client1.setCookieStore(myCookieStore);
+
 
                     RequestParams params = new RequestParams();
                     params.put("username", usernameProfileTextView.getText());
