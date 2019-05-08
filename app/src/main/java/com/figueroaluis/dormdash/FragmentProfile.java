@@ -91,7 +91,6 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
         adapter = new FragmentProfileAdapter(getContext(), optionItemList);
         mListView = view.findViewById(R.id.option_items_listview);
         mListView.setAdapter(adapter);
-
         userImage = view.findViewById(R.id.profile_user_imageview);
         Picasso.get().load("https://i.kym-cdn.com/photos/images/newsfeed/001/487/781/ea0.jpg").into(userImage);
 
@@ -99,6 +98,8 @@ public class FragmentProfile extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 ProfileOptionItem selectedOption = optionItemList.get(position);
+                System.out.println("LOGGING OUT");
+
 
                 if(selectedOption.text.equals("Log Out")){
                     // delete the shared preferences

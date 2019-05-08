@@ -367,23 +367,23 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                     EventBus.getDefault().post(new FragmentProfile.switchBoolean(mSharedPreferences.getBoolean(SWITCH_BOOLEAN,workSwitch.isChecked()),"Success"));
 
-                    client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                            System.out.println("ON SUCCESS as WORKER");
-                            String s = new String(responseBody);
-                            System.out.println(s);
-
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                            System.out.println("failure to send worktime data initially");
-
-                        }
-                    });
+//                    client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+//                        @Override
+//                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//
+//                            System.out.println("I have sucessfully become ");
+//                            String s = new String(responseBody);
+//                            System.out.println(s);
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//
+//                            System.out.println("failure to send worktime data initially");
+//
+//                        }
+//                    });
 
 
                     if(workSwitch.isChecked()) {
