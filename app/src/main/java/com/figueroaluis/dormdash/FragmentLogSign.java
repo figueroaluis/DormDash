@@ -64,6 +64,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
     private AsyncHttpClient client;
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences cookieSharedPref;
     private String Name,Password;
 
     public static final String PREFERENCE = "preference";
@@ -451,6 +452,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                     if(selectedOption.text.equals("Log Out")){
                         // delete the shared preferences
                         // open up the new fragment that replaces the profile screen
+                        System.out.println("Clearing out now!");
 
                         mEditor.clear();
                         mEditor.commit();

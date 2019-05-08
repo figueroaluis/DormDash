@@ -43,61 +43,74 @@ public class FragmentAcceptOrders extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.button_accept){
+        if (view.getId() == R.id.button_accept) {
 
             client = new AsyncHttpClient();
 
             PersistentCookieStore cookieStore = new PersistentCookieStore(getActivity());
 
-            String cookieName = "";
+//            String cookieName = "";
             String cookieValue = "";
-            String cookieUsername = "";
+            String cookieUser = "";
+            //prev
+//            List<Cookie> cook = cookieStore.getCookies();
+//            for (Cookie c : cook) {
+//                cookieName = c.getName();
+//                cookieValue = c.getValue();
+//                cookieUsername = c.getDomain();
+//                System.out.println(cookieName);
+//                System.out.println(cookieValue);
+//                System.out.println(c);
+//                System.out.println(cookieUsername);
+//
+//            }
+//            System.out.println(cookieUsername);
             List<Cookie> cook = cookieStore.getCookies();
             for (Cookie c : cook) {
-                cookieName = c.getName();
-                cookieValue = c.getValue();
-                cookieUsername = c.getDomain();
-                System.out.println(cookieName);
+                if (c.getName().equals("token")) {
+//                    cookieName = c.getName();
+                    cookieValue = c.getValue();
+//                    cookieUser = c.getDomain().toString();
+                } else {
+                    cookieUser = c.getValue();
+                }
+                System.out.println(cookieUser);
                 System.out.println(cookieValue);
-                System.out.println(c);
-                System.out.println(cookieUsername);
-
-            }
-            System.out.println(cookieUsername);
 
 
-
-            RequestParams params = new RequestParams();
-            params.put("username", cookieUsername);
-            params.put("Authorization", cookieValue);
+                RequestParams params = new RequestParams();
+                params.put("username", cookieUser);
+                params.put("Authorization", cookieValue);
 //            params.put("foodOrder", orderText.getText().toString());
 //            params.put("orderPickupLocation", pickUpLocationText.getText().toString());
-            System.out.println("Accept Orders Begun");
+                System.out.println("Accept Orders Begun");
 
-            client.post("http://10.0.2.2:80/acceptorder", params, new AsyncHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    // called before request is started
-                    System.out.println("STARTED order onStart");
+                client.post("http://10.0.2.2:80/acceptorder", params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        // called before request is started
+                        System.out.println("STARTED order onStart");
 
-                }
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    }
 
-                    System.out.println("ONSUCCESS orders accepting");
-                    String s = new String(responseBody);
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                    System.out.println(s);
-                }
+                        System.out.println("ONSUCCESS orders accepting");
+                        String s = new String(responseBody);
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        System.out.println(s);
+                    }
 
-                    System.out.println("Accept orders failure");
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-                }
-            });
+                        System.out.println("Accept orders failure");
 
+                    }
+                });
+
+            }
         }
     }
 
