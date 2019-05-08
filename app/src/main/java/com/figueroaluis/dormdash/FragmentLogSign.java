@@ -139,7 +139,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
             if(signUpMode){
 
 //            client.post("http://3.14.49.112:80/register", params, new AsyncHttpResponseHandler() {
-                client.post("http://3.14.202.131:80/register", params, new AsyncHttpResponseHandler() {
+                client.post("http://10.0.2.2:80/register", params, new AsyncHttpResponseHandler() {
 
                     @Override
                     public void onStart() {
@@ -177,7 +177,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                 System.out.println("LOG IN CLICKED YAY");
 
 
-                client.post("http://3.14.202.131:80/login", params, new AsyncHttpResponseHandler() {
+                client.post("http://10.0.2.2:80/login", params, new AsyncHttpResponseHandler() {
                     //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onStart() {
@@ -367,23 +367,23 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
 
                     EventBus.getDefault().post(new FragmentProfile.switchBoolean(mSharedPreferences.getBoolean(SWITCH_BOOLEAN,workSwitch.isChecked()),"Success"));
 
-                    client1.post("http://3.14.202.131:80/worktime", params, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                            System.out.println("ON SUCCESS as WORKER");
-                            String s = new String(responseBody);
-                            System.out.println(s);
-
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                            System.out.println("failure to send worktime data initially");
-
-                        }
-                    });
+//                    client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
+//                        @Override
+//                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//
+//                            System.out.println("I have sucessfully become ");
+//                            String s = new String(responseBody);
+//                            System.out.println(s);
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+//
+//                            System.out.println("failure to send worktime data initially");
+//
+//                        }
+//                    });
 
 
                     if(workSwitch.isChecked()) {
@@ -394,7 +394,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         params.put("username", usernameProfileTextView.getText());
                         params.put("working", "1");
 
-                        client1.post("http://3.14.202.131:80/worktime", params, new AsyncHttpResponseHandler() {
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -421,7 +421,7 @@ public class FragmentLogSign extends Fragment implements View.OnClickListener, V
                         params.put("username", usernameProfileTextView.getText());
                         params.put("working", "0");
 
-                        client1.post("http://3.14.202.131:80/worktime", params, new AsyncHttpResponseHandler() {
+                        client1.post("http://10.0.2.2:80/worktime", params, new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 

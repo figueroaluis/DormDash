@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("USER IS" + cookieUser);
 
 
-                        client.post("http://3.14.202.131:80/status", params, new AsyncHttpResponseHandler() {
+                        client.post("http://10.0.2.2:80/status", params, new AsyncHttpResponseHandler() {
                         //                client.get("http://3.14.49.112:80/login", params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onStart() {

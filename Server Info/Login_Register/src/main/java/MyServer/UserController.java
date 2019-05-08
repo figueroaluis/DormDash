@@ -99,11 +99,19 @@ public class UserController {
 		String selectTableSql = "SELECT password FROM users WHERE username = ?;";
 		String storedHashedKey;
 
+
+
 		/*Creating http headers object to place into response entity the server will return.
 		This is what allows us to set the content-type to application/json or any other content-type
 		we would want to return */
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
+
+		//check is person is already logged in
+//		if (MyServer.ActiveUsers.contains(username)){
+//			return new ResponseEntity("{\"message\":\"Already logged in.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+//
+//		}
 
 		MessageDigest digest = null;
 		String hashedKey = null;
@@ -167,7 +175,8 @@ public class UserController {
 		//section to verify authorization. If it fails jump to the catch clause
 
 		String token = null;
-		String order_id = null;
+        String order_id = null;
+		System.out.println("This is the Token" + Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody());
 
 
 
@@ -186,6 +195,14 @@ public class UserController {
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
         String grabOrder = "Select orderID From orders Where username = ?;";
+		//get prices for orders
+
+
+		float price = 0;
+		float price2 = 0;
+		float totalPrice = 0;
+
+
 
 		//section for ordercheck and hashmap placement
 
@@ -259,6 +276,29 @@ public class UserController {
 
 
 
+            //Katy Price
+			String getLocationSQL = "SELECT buildingCharge FROM locations WHERE buildingName=?";
+
+			ps1 = conn.prepareStatement(getLocationSQL);
+			ps1.setString(1, String.valueOf(orderPickupLocation));
+			ResultSet rs1 = ps1.executeQuery();
+
+			if(rs1.next()) {
+				price = rs1.getFloat("buildingCharge");
+			}
+
+
+			ps2 = conn.prepareStatement(getLocationSQL);
+			ps2.setString(1, String.valueOf(orderDropoffLocation));
+			ResultSet rs2 = ps2.executeQuery();
+
+			if(rs2.next()) {
+				price2 = rs2.getFloat("buildingCharge");
+			}
+
+			totalPrice = price + price2;
+
+
 		} catch(ClassNotFoundException e) {
 			System.out.println("Oops there was an error.");
 			e.printStackTrace();
@@ -271,9 +311,7 @@ public class UserController {
 		if (MyServer.CustomerOrder.containsKey(order_id)){
 			return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
-		}
-		MyServer.CustomerOrder.put(order_id, username);
-		MyServer.OpenOrders.put(order_id, foodOrder);
+
 
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);
@@ -399,9 +437,9 @@ public class UserController {
 		String username = request.getParameter("username");
 //        String recipient = request.getParameter("recipient");
 		String orderID = request.getParameter("orderID");
-        String workstatus = request.getParameter("working");
-		String selectUsername = "SELECT username FROM orders WHERE orderID = ?;";
-
+        String workstatus = "Select is_working from users where username = ?;";
+//		String selectUsername = "SELECT username FROM orders WHERE orderID = ?;";
+		int status = 0;
 		String token;
 		try {
 			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
@@ -414,9 +452,29 @@ public class UserController {
 			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
 		}
 
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+			//put on database
+			ps = conn.prepareStatement(workstatus);
+			ps.setString(1, username);
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				status = Integer.parseInt(rs.getString("is_working"));
+				System.out.println(status);
+			}
+
+		} catch(Exception e) {
+			System.out.println("Oops there was an error");
+			e.printStackTrace();
+			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
 
 		//check if working
-		if (Integer.parseInt(workstatus) == 0) {
+		if (status == 0) {
 			return new ResponseEntity("{\"message\":\"You aren't working at the moment" +
 					". Activate your work status.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
@@ -424,6 +482,11 @@ public class UserController {
 		//check if you already grabbed this particular order
 		if (MyServer.DeliveredBy.containsKey(orderID) && MyServer.DeliveredBy.get(orderID).equals(username)){
 			return new ResponseEntity("{\"message\":\"You already grabbed this order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		if (MyServer.OpenOrders.get(orderID) == username) {
+			return new ResponseEntity("{\"message\":\"You can't grab your own order.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
 		}
 
 		MyServer.DeliveredBy.put(orderID, username);
@@ -540,8 +603,9 @@ public class UserController {
 
 
     }
-//    @RequestMapping(value = "/logout", method = RequestMethod.DELETE) // <-- setup the endpoint URL at /hello with the HTTP POST method
+//    @RequestMapping(value = "/logout", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 //    public ResponseEntity<String> logout(HttpServletRequest request) {
+//		MyServer.ActiveUsers.remove(request.getParameter("username"));
 //        HttpHeaders responseHeaders = new HttpHeaders();
 //        responseHeaders.set("Content-Type", "application/json");
 //        JSONObject responseObj = new JSONObject(MyServer.OpenOrders);

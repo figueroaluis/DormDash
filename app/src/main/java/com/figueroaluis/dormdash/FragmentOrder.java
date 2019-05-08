@@ -100,9 +100,9 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
 //            System.out.println(str);
 
 
+            System.out.println("Regular ORders");
 
-
-            client.post("http://3.14.202.131:80/order", params, new AsyncHttpResponseHandler() {
+            client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
 
                 @Override
                 public void onStart() {
