@@ -25,6 +25,8 @@ public class UserController {
 	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	static Connection conn = null;
 	static PreparedStatement ps = null;
+	static PreparedStatement ps1 = null;
+	static PreparedStatement ps2 = null;
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST) // <-- setup the endpoint URL at /hello with the HTTP POST method
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
@@ -161,19 +163,16 @@ public class UserController {
 		//section to verify authorization. If it fails jump to the catch clause
 
 		String token = null;
-        String order_id = null;
+		String order_id = null;
 
 
-        try {
-			final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
-			token = request.getHeader("Authorization");
-			responseHeaders.set("Authorization", token);
+		final Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody();
 
-			System.out.println(claims.getSubject());
-		} catch (final SignatureException e) {
-			return new ResponseEntity("{\"message\":\"Invalid Session\"}", responseHeaders, HttpStatus.FORBIDDEN);
-		}
+		token = request.getHeader("Authorization");
+		responseHeaders.set("Authorization", token);
+
+		System.out.println(claims.getSubject());
 
 		String username = request.getParameter("username");
 		String foodOrder = request.getParameter("foodOrder");
@@ -182,7 +181,7 @@ public class UserController {
 		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
-        String grabOrder = "Select orderID From orders Where username = '" + username +"';";
+		String grabOrder = "Select orderID From orders Where username = '" + username +"';";
 
 		//section for ordercheck and hashmap placement
 
@@ -190,7 +189,7 @@ public class UserController {
 		//section for SQL stuff that will save in case of server failuer
 		try {
 
-            Class.forName(JDBC_DRIVER);
+			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
 			//get correct username
@@ -206,14 +205,48 @@ public class UserController {
 			ps.setString(4, orderDropoffLocation);
 			ps.executeUpdate();
 
-            ps = conn.prepareStatement(grabOrder);
-            ResultSet order_rs = ps.executeQuery();
-            System.out.println(order_rs);
+			ps = conn.prepareStatement(grabOrder);
+			ResultSet order_rs = ps.executeQuery();
+			System.out.println(order_rs);
 
-            while (order_rs.next()) {
+			while (order_rs.next()) {
 
-                order_id = order_rs.getString("orderID");
-            }
+				order_id = order_rs.getString("orderID");
+			}
+
+
+
+			//get prices for orders
+
+
+			float price = 0;
+			float price2 = 0;
+			float totalPrice = 0;
+
+			String getLocationSQL = "SELECT building_charge FROM locations WHERE buildingName=?";
+
+			ps1 = conn.prepareStatement(getLocationSQL);
+			ps1.setString(1, String.valueOf(orderPickupLocation));
+			ResultSet rs1 = ps1.executeQuery();
+
+			if(rs1.next()) {
+				price = rs1.getFloat("building_charge");
+			}
+
+
+			ps2 = conn.prepareStatement(getLocationSQL);
+			ps2.setString(1, String.valueOf(orderDropoffLocation));
+			ResultSet rs2 = ps2.executeQuery();
+
+			if(rs2.next()) {
+				price2 = rs2.getFloat("building_charge");
+			}
+
+			totalPrice = price + price2;
+
+			MyServer.OrderPrices.put(Integer.parseInt(order_id), totalPrice);
+
+
 
 		} catch(ClassNotFoundException e) {
 			System.out.println("Oops there was an error.");
@@ -221,16 +254,15 @@ public class UserController {
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 		catch (SQLException se) {
-            se.printStackTrace();
-            return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-        }
+			se.printStackTrace();
+			return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+		if (MyServer.CustomerOrder.containsKey(order_id)){
+			return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 
-        if (MyServer.CustomerOrder.containsKey(order_id)){
-            return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
-
-        }
-        MyServer.CustomerOrder.put(order_id, username);
-        MyServer.OpenOrders.put(order_id, foodOrder);
+		}
+		MyServer.CustomerOrder.put(order_id, username);
+		MyServer.OpenOrders.put(order_id, foodOrder);
 
 
 		return new ResponseEntity("{\"message\":\"order placed\"}", responseHeaders, HttpStatus.OK);

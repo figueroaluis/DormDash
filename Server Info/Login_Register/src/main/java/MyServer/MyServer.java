@@ -15,6 +15,7 @@ public class MyServer {
 	public static HashMap<String, String> CustomerOrder = new HashMap<>(); //key is order_id, username is value
 	public static HashMap<String, String> DeliveredBy = new HashMap<>(); //key is username of orderID,
 																			// value is deliveryperson username
+	public static HashMap<Integer, Float> OrderPrices = new HashMap<Integer, Float>(); //key is orderID, value is price of order
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyServer.class, args);
