@@ -102,7 +102,7 @@ public class FragmentOrder extends Fragment implements View.OnClickListener {
 
 
 
-            client.post("http://3.14.202.131:80/order", params, new AsyncHttpResponseHandler() {
+            client.post("http://10.0.2.2:80/order", params, new AsyncHttpResponseHandler() {
 
                 @Override
                 public void onStart() {
