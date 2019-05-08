@@ -21,7 +21,8 @@ public class UserController {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 	static final String DB_URL = "jdbc:mysql://localhost/DormDash?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	static final String USER = "root";
-	static final String PASSWORD = "D0rmdash!";
+//	static final String PASSWORD = "D0rmdash!";
+	static final String PASSWORD = "";
 	static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	static Connection conn = null;
 	static PreparedStatement ps = null;
@@ -30,7 +31,7 @@ public class UserController {
 	public ResponseEntity<String> register(@RequestBody String body, HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters
 		String password = request.getParameter("password");
-		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
+		String selectTableSql = "SELECT password FROM users WHERE username = ?;";
 		String insertTableSql = "INSERT INTO users(username, password) VALUES(?, ?)";
 
 		/*Creating http headers object to place into response entity the server will return.
@@ -55,7 +56,9 @@ public class UserController {
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
 			ps = conn.prepareStatement(selectTableSql);
+			ps.setString(1, username);
 			System.out.println(selectTableSql);
 			ResultSet rs = ps.executeQuery();
 
@@ -91,7 +94,7 @@ public class UserController {
 	public ResponseEntity<String> login(HttpServletRequest request) {
 		String username = request.getParameter("username"); //Grabbing name and age parameters from URL
 		String password = request.getParameter("password");
-		String selectTableSql = "SELECT password FROM users WHERE username = '" + username + "';";
+		String selectTableSql = "SELECT password FROM users WHERE username = ?;";
 		String storedHashedKey;
 
 		/*Creating http headers object to place into response entity the server will return.
@@ -113,6 +116,7 @@ public class UserController {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			ps = conn.prepareStatement(selectTableSql);
+			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			//Check if the hashmap contains the username trying to login
 
@@ -179,12 +183,17 @@ public class UserController {
 		String foodOrder = request.getParameter("foodOrder");
 		String orderPickupLocation = request.getParameter("orderPickupLocation");
 		String orderDropoffLocation = request.getParameter("orderDropoffLocation");
-		String selectUsername = "SELECT username FROM users WHERE username = '" + username + "';";
+		String selectUsername = "SELECT username FROM users WHERE username = ?;";
 		String insertSql = "INSERT INTO orders(username,foodOrder, orderPickupLocation, orderDropoffLocation) " +
 				"VALUES (?, ?, ?, ?)";
-        String grabOrder = "Select orderID From orders Where username = '" + username +"';";
+        String grabOrder = "Select orderID From orders Where username = ?;";
 
 		//section for ordercheck and hashmap placement
+
+		if (foodOrder.isEmpty()) {
+			return new ResponseEntity("{\"message\":\"You need to have an order\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
+		}
 
 
 		//section for SQL stuff that will save in case of server failuer
@@ -195,6 +204,7 @@ public class UserController {
 
 			//get correct username
 			ps = conn.prepareStatement(selectUsername);
+			ps.setString(1, username);
 			System.out.println(selectUsername);
 			ResultSet rs = ps.executeQuery();
 
@@ -207,6 +217,7 @@ public class UserController {
 			ps.executeUpdate();
 
             ps = conn.prepareStatement(grabOrder);
+			ps.setString(1, username);
             ResultSet order_rs = ps.executeQuery();
             System.out.println(order_rs);
 
@@ -403,7 +414,7 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Content-Type", "application/json");
 
-		String updateSql = "UPDATE Users SET is_working = ?" + "WHERE username = '" + username + "';";
+		String updateSql = "UPDATE Users SET is_working = ? " + "WHERE username = ?;";
 
 
 		String token;
@@ -423,7 +434,9 @@ public class UserController {
 
 			//put on database
 			ps = conn.prepareStatement(updateSql);
-			ps.setString(1, workStatus);
+			ps.setString(1, workStatus.toString());
+			ps.setString(2, username);
+
 
 			ps.executeUpdate();
 
