@@ -176,7 +176,9 @@ public class UserController {
 
 		String token = null;
         String order_id = null;
-		System.out.println("This is the Token" + Jwts.parser().setSigningKey(key).parseClaimsJws(request.getHeader("Authorization")).getBody());
+		int status = 0;
+
+		System.out.println("This is the Token" + request.getHeader("Authorization"));
 
 
 
@@ -196,6 +198,8 @@ public class UserController {
 				"VALUES (?, ?, ?, ?)";
         String grabOrder = "Select orderID From orders Where username = ?;";
 		//get prices for orders
+		String workstatus = "Select is_working from users where username = ?;";
+
 
 
 		float price = 0;
@@ -276,6 +280,18 @@ public class UserController {
 
 
 
+			//workstatus
+			ps = conn.prepareStatement(workstatus);
+			ps.setString(1, username);
+			System.out.println(workstatus);
+
+			ResultSet ds = ps.executeQuery();
+			System.out.println(ds);
+			while (ds.next()) {
+				status = Integer.parseInt(ds.getString("is_working"));
+				System.out.println(status);
+			}
+
             //Katy Price
 			String getLocationSQL = "SELECT buildingCharge FROM locations WHERE buildingName=?";
 
@@ -305,11 +321,29 @@ public class UserController {
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
 		catch (SQLException se) {
-			se.printStackTrace();
-			return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+            se.printStackTrace();
+            return new ResponseEntity("{\"message\":\"Somehow your order already exists.(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+        if (MyServer.CustomerOrder.containsKey(order_id)){
+            return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
+        }
+
+		//check if working
+		if (status == 1) {
+			return new ResponseEntity("{\"message\":\"You are currently working." +
+					" Change your status to client.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
 		}
-		if (MyServer.CustomerOrder.containsKey(order_id)){
-			return new ResponseEntity("{\"message\":\"Order already exists.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
+
+        //Create a JSONObject containing the jar file with details
+		JSONObject values = new JSONObject();
+		values.put("orderPickupLocation", orderPickupLocation);
+		values.put("foodOrder", foodOrder);
+		values.put("price", Float.toString(totalPrice));
+		values.put("orderDropoffLocation", orderDropoffLocation);
+
 
 
 
@@ -470,6 +504,11 @@ public class UserController {
 			System.out.println("Oops there was an error");
 			e.printStackTrace();
 			return new ResponseEntity("{\"message\":\"Something went wrong :(\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+		}
+
+		if (orderID.isEmpty()){
+			return new ResponseEntity("{\"message\":\"You need to supply and Order Id.\"}", responseHeaders, HttpStatus.BAD_REQUEST);
+
 		}
 
 
